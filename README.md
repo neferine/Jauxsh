@@ -2,4 +2,4 @@
 
 ![Jauxsh Logo](public/images/Jauxsh.png)
 
-Jauxsh is a personal branding e-commerce platform designed to help users express their style and personality through curated, high
+**Jauxsh** is a personal branding platform and e-commerce store designed to help users express their style and personality through curated, high-quality products.
