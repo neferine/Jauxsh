@@ -10,8 +10,9 @@
             <img id="heroImage" 
                  src="{{ asset('images/hero/hero1.png') }}" 
                  alt="Hero Image"
-                 class="w-full h-full object-cover object-center transition-opacity duration-500">
-            
+                 class="w-full h-full object-cover object-center transition-opacity duration-500"
+                 loading="lazy" >
+
             <!-- Minimalist Controls Overlay (Bottom Left) -->
             <div class="absolute bottom-6 left-6 flex items-center gap-3 bg-black/20 backdrop-blur-sm px-4 py-2.5 rounded-full">
                 <!-- Dots Indicator -->
@@ -89,7 +90,7 @@
                 <!-- Add your product cards here -->
                 <div class="bg-white rounded-sm shadow-sm overflow-hidden group cursor-pointer">
                     <div class="aspect-square bg-gray-200 overflow-hidden">
-                        <img src="{{ asset('images/products/jacket1.jpg') }}" alt="Product" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <img src="{{ asset('images/products/jacket1.jpg') }}" loading="lazy" alt="Product" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     </div>
                     <div class="p-4">
                         <h3 class="font-lora text-base text-gray-900 mb-1">Premium Fleece Jacket</h3>
@@ -118,7 +119,7 @@
                 <!-- Add your product cards here -->
                 <div class="bg-white rounded-sm shadow-sm overflow-hidden group cursor-pointer">
                     <div class="aspect-square bg-gray-200 overflow-hidden">
-                        <img src="{{ asset('images/products/tshirt1.jpg') }}" alt="Product" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <img src="{{ asset('images/products/tshirt1.jpg') }}" loading="lazy" alt="Product" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     </div>
                     <div class="p-4">
                         <h3 class="font-lora text-base text-gray-900 mb-1">Essential T-Shirt</h3>

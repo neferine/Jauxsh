@@ -9,10 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ asset('images/jau.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
-    <!-- Page Transitions CSS -->
-    <link rel="stylesheet" href="{{ asset('/resources/css/page-transitions.css') }}">
-    
+
     <title>@yield('title', 'My E-Commerce Store')</title>
     @stack('styles')
     <style>
@@ -21,15 +18,8 @@
         }
     </style>
 </head>
-<body class="relative min-h-screen bg-cover bg-center bg-no-repeat scroll-smooth"
-      style="background-image: url('{{ asset('images/bg.png') }}');">
-    
-    <!-- Page Transition Overlay -->
-    <div id="page-transition" class="fixed inset-0 z-[100] pointer-events-none overflow-hidden bg-gradient-to-br from-[#d8e8e7] to-[#c5dbd9]">
-    </div>
+<body class="relative min-h-screen bg-cover bg-center bg-no-repeat scroll-smooth">
 
-    <!-- Wrapper for current page -->
-    <div id="page-wrapper" class="relative">
         <!-- Background overlays -->
         <div class="absolute inset-0 bg-[#4d9b91]/20 pointer-events-none z-0"></div>
         <div class="absolute inset-0 noise-overlay pointer-events-none z-0"></div>
@@ -44,7 +34,7 @@
        
         <!-- Footer -->
         @include('layouts.footer')
-    </div>
+    
     
     <!-- Auth Popup Modal (only for guests) -->
     @guest
@@ -54,6 +44,5 @@
     @stack('scripts')
 
     <!-- Page Transitions Script -->
-    <script src="{{ asset('resources/js/page-transitions.js') }}"></script>
 </body>
 </html>
