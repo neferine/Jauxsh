@@ -1,26 +1,26 @@
 <nav id="navbar" class="py-3 bg-[#d8e8e7] fixed left-0 top-0 w-full z-20 transition-transform duration-300">
-    <div class="container mx-auto px-8 py-5">
+    <div class="container mx-auto px-8 py-4">
         <div class="flex items-center justify-between relative">
-            <ul class="flex space-x-8">
+            <ul class="flex space-x-10">
                 <li class="nav-item">
-                    <a href="#" class="font-lora text-black hover:opacity-70 transition">Shop</a>
+                    <a href="#" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase">Shop</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="font-lora text-black hover:opacity-70 transition">About</a>
+                     <a href="{{ route('about') }}" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase">About</a>
                 </li>
             </ul>
             <a href="/" class="absolute left-1/2 transform -translate-x-1/2 flex items-center">
-                <div class="h-12 w-12 flex items-center justify-center">
-                    <img src="{{ asset('images/Jauxsh.png') }}"
+                <div class="h-14 w-14 flex items-center justify-center">
+                    <img src="/images/Jauxsh.png"
                         alt="JauxShop Logo"
                         class="w-auto h-auto scale-290">
                 </div>
             </a>
-            <ul class="flex space-x-8">
+            <ul class="flex space-x-10">
                 <!-- Currency Dropdown -->
                 <li class="nav-item relative">
                     <a>
-                    <button id="currencyBtn" class="font-lora text-black hover:opacity-70 transition flex items-center gap-1">
+                    <button id="currencyBtn" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition flex items-center gap-1 uppercase">
                         <span id="currentCurrency">USD $</span>
                     </button>
                     </a>
@@ -49,13 +49,13 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="font-lora text-black hover:opacity-70 transition">Search</a>
+                    <a href="#" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase">Search</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="font-lora text-black hover:opacity-70 transition">Account</a>
+                    <a href="/login" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase">Account</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="font-lora text-black hover:opacity-70 transition">Cart</a>
+                    <a href="#" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase">Cart</a>
                 </li>
             </ul>
         </div>
@@ -69,6 +69,8 @@
 .nav-item a, .nav-item button {
     position: relative;
     display: inline-block;
+    font-weight: 400;
+    letter-spacing: 0.05em;
 }
 .nav-item a::after {
     content: '';
@@ -76,7 +78,7 @@
     bottom: -4px;
     left: 0;
     width: 0;
-    height: 2px;
+    height: 1.5px;
     background-color: #1fac99ff;
     transition: width 0.3s ease;
 }
@@ -112,7 +114,6 @@ window.addEventListener('scroll', () => {
 // Currency dropdown functionality
 const currencyBtn = document.getElementById('currencyBtn');
 const currencyDropdown = document.getElementById('currencyDropdown');
-const currencyArrow = document.getElementById('currencyArrow');
 let isDropdownOpen = false;
 
 // Toggle dropdown
@@ -122,10 +123,8 @@ currencyBtn.addEventListener('click', (e) => {
     
     if (isDropdownOpen) {
         currencyDropdown.classList.remove('hidden');
-        currencyArrow.style.transform = 'rotate(180deg)';
     } else {
         currencyDropdown.classList.add('hidden');
-        currencyArrow.style.transform = 'rotate(0deg)';
     }
 });
 
@@ -133,7 +132,6 @@ currencyBtn.addEventListener('click', (e) => {
 document.addEventListener('click', (e) => {
     if (!currencyBtn.contains(e.target) && !currencyDropdown.contains(e.target)) {
         currencyDropdown.classList.add('hidden');
-        currencyArrow.style.transform = 'rotate(0deg)';
         isDropdownOpen = false;
     }
 });
@@ -143,36 +141,36 @@ function changeCurrency(code, symbol) {
     const currentCurrency = document.getElementById('currentCurrency');
     currentCurrency.textContent = `${code} ${symbol}`;
     
-    // Store in localStorage
-    localStorage.setItem('selectedCurrency', code);
-    localStorage.setItem('selectedCurrencySymbol', symbol);
+    // Store in memory instead of localStorage
+    window.selectedCurrency = code;
+    window.selectedCurrencySymbol = symbol;
     
     // Close dropdown
     currencyDropdown.classList.add('hidden');
-    currencyArrow.style.transform = 'rotate(0deg)';
     isDropdownOpen = false;
     
     // Optional: Send to backend
-    fetch('/api/set-currency', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({ currency: code })
-    });
+    const csrfToken = document.querySelector('meta[name="csrf-token"]');
+    if (csrfToken) {
+        fetch('/api/set-currency', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken.content
+            },
+            body: JSON.stringify({ currency: code })
+        });
+    }
     
     // Optional: Reload page to update prices
     // window.location.reload();
 }
 
-// Load saved currency on page load
+// Initialize currency on page load
 document.addEventListener('DOMContentLoaded', () => {
-    const savedCurrency = localStorage.getItem('selectedCurrency');
-    const savedSymbol = localStorage.getItem('selectedCurrencySymbol');
-    
-    if (savedCurrency && savedSymbol) {
-        document.getElementById('currentCurrency').textContent = `${savedCurrency} ${savedSymbol}`;
+    // Set default or use saved currency from backend
+    if (window.selectedCurrency && window.selectedCurrencySymbol) {
+        document.getElementById('currentCurrency').textContent = `${window.selectedCurrency} ${window.selectedCurrencySymbol}`;
     }
 });
 </script>

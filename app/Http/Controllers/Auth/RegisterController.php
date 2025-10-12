@@ -16,27 +16,25 @@ class RegisterController extends Controller
         return view('auth.register');
     }
     
-    public function register(Request $request)
+   public function register(Request $request)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Password::min(8)],
-            'phone' => ['nullable', 'string', 'max:20'],
-            'address' => ['nullable', 'string', 'max:500'],
         ]);
-        
+
         $user = User::create([
-            'name' => $validated['name'],
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'phone' => $validated['phone'] ?? null,
-            'address' => $validated['address'] ?? null,
             'is_admin' => false,
         ]);
-        
+
         Auth::login($user);
-        
+
         return redirect()->route('home')->with('success', 'Account created successfully!');
     }
 }

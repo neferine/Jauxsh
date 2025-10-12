@@ -9,60 +9,51 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ asset('images/jau.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <!-- Page Transitions CSS -->
+    <link rel="stylesheet" href="{{ asset('/resources/css/page-transitions.css') }}">
+    
     <title>@yield('title', 'My E-Commerce Store')</title>
     @stack('styles')
-
     <style>
         .noise-overlay {
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
         }
     </style>
 </head>
-<body class="relative min-h-screen bg-cover bg-center bg-no-repeat scroll-smooth" 
+<body class="relative min-h-screen bg-cover bg-center bg-no-repeat scroll-smooth"
       style="background-image: url('{{ asset('images/bg.png') }}');">
-
-    <div class="absolute inset-0 bg-[#4d9b91]/20 pointer-events-none z-0"></div>
-    <div class="absolute inset-0 noise-overlay pointer-events-none z-0"></div>
-
-    <!-- Navbar -->
-     
-    @include('layouts.navbar')
     
-    <!-- Main Content -->
-    <main class="relative z-10 container mx-auto px-8 py-5">
-        @yield('content')
-    </main>
-    
+    <!-- Page Transition Overlay -->
+    <div id="page-transition" class="fixed inset-0 z-[100] pointer-events-none overflow-hidden bg-gradient-to-br from-[#d8e8e7] to-[#c5dbd9]">
+    </div>
 
-    <!-- Footer -->
-    @include('layouts.footer')
+    <!-- Wrapper for current page -->
+    <div id="page-wrapper" class="relative">
+        <!-- Background overlays -->
+        <div class="absolute inset-0 bg-[#4d9b91]/20 pointer-events-none z-0"></div>
+        <div class="absolute inset-0 noise-overlay pointer-events-none z-0"></div>
+        
+        <!-- Navbar -->
+        @include('layouts.navbar')
+       
+        <!-- Main Content -->
+        <main class="relative z-10 container mx-auto px-8 py-5">
+            @yield('content')
+        </main>
+       
+        <!-- Footer -->
+        @include('layouts.footer')
+    </div>
+    
     <!-- Auth Popup Modal (only for guests) -->
     @guest
         @include('auth.modals.auth-popup')
     @endguest
-    
+   
     @stack('scripts')
-    
-    <!-- 
-    @guest
-    <script>
-        // Time between popups (in milliseconds)
-        const POPUP_DELAY = 30000; // 10 seconds for testing (change as needed)
-        
-        // Function to show popup
-        function showAuthPopup() {
-            const popup = document.getElementById('authPopupModal');
-            if (popup) {
-                popup.classList.remove('hidden');
-            }
-        }
 
-        // Repeatedly trigger popup every delay
-        setInterval(() => {
-            showAuthPopup();
-        }, POPUP_DELAY);
-    </script>
-    @endguest
-    Timed Popup Script (only for guests) -->
+    <!-- Page Transitions Script -->
+    <script src="{{ asset('resources/js/page-transitions.js') }}"></script>
 </body>
 </html>

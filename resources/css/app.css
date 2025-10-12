@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './page-transitions.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -18,7 +19,6 @@
     font-style: normal;
     font-display: swap;
 }
-
 
 @font-face {
     font-family: 'Cg';
