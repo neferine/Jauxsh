@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" href="{{ asset('images/jau.png') }}">
+    <link rel="icon" href="{{ asset('images/Jau.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <title>@yield('title', 'My E-Commerce Store')</title>

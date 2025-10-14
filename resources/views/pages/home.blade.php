@@ -80,24 +80,53 @@
                 <h2 class="font-cg text-3xl md:text-4xl font-bold tracking-tight uppercase text-gray-900">
                     Handsome Made Fleece
                 </h2>
-                <a href="/shop/jackets" class="inline-block px-8 py-2 font-lora text-sm text-gray-900 border-2 border-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-all duration-300">
+                <a href="/shop" class="inline-block px-8 py-2 font-lora text-sm text-gray-900 border-2 border-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-all duration-300">
                     View all
                 </a>
             </div>
 
-            <!-- Product Grid Placeholder -->
+            <!-- Product Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Add your product cards here -->
-                <div class="bg-white rounded-sm shadow-sm overflow-hidden group cursor-pointer">
+                @forelse($fleeceProducts as $product)
+                <a href="/products/{{ $product->id }}" class="bg-white rounded-sm shadow-sm overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow duration-300">
                     <div class="aspect-square bg-gray-200 overflow-hidden">
-                        <img src="{{ asset('images/products/jacket1.jpg') }}" loading="lazy" alt="Product" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        @if($product->images->count() > 0)
+                        <img src="{{ asset('storage/' . $product->images->first()->image_url) }}" 
+                             loading="lazy" 
+                             alt="{{ $product->name }}" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        @else
+                        <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                            <svg class="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        @endif
                     </div>
                     <div class="p-4">
-                        <h3 class="font-lora text-base text-gray-900 mb-1">Premium Fleece Jacket</h3>
-                        <p class="font-lora text-sm text-gray-600">$89.00</p>
+                        <h3 class="font-lora text-base text-gray-900 mb-1 truncate">{{ $product->name }}</h3>
+                        <div class="flex items-center justify-between">
+                            <p class="font-lora text-sm font-medium text-gray-900">${{ number_format($product->price, 2) }}</p>
+                            @if($product->stock <= 0)
+                            <span class="text-xs text-red-600 font-cg">Out of stock</span>
+                            @elseif($product->stock <= 10)
+                            <span class="text-xs text-yellow-600 font-cg">Low stock</span>
+                            @endif
+                        </div>
+                        @if($product->category)
+                        <p class="text-xs text-gray-500 font-cg mt-1">{{ $product->category->name }}</p>
+                        @endif
                     </div>
+                </a>
+                @empty
+                <div class="col-span-full text-center py-12">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                    <h3 class="mt-4 text-lg font-medium text-gray-900 font-lora">No products available yet</h3>
+                    <p class="mt-2 text-sm text-gray-500 font-cg">Check back soon for new arrivals!</p>
                 </div>
-                <!-- Repeat for more products -->
+                @endforelse
             </div>
         </div>
     </div>
@@ -109,24 +138,53 @@
                 <h2 class="font-cg text-3xl md:text-4xl font-bold tracking-tight uppercase text-gray-900">
                     Best Sellers
                 </h2>
-                <a href="/collections/best-sellers" class="inline-block px-8 py-2 font-lora text-sm text-gray-900 border-2 border-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-all duration-300">
+                <a href="/shop" class="inline-block px-8 py-2 font-lora text-sm text-gray-900 border-2 border-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-all duration-300">
                     View all
                 </a>
             </div>
 
-            <!-- Product Grid Placeholder -->
+            <!-- Product Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Add your product cards here -->
-                <div class="bg-white rounded-sm shadow-sm overflow-hidden group cursor-pointer">
+                @forelse($bestSellers as $product)
+                <a href="/products/{{ $product->id }}" class="bg-white rounded-sm shadow-sm overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow duration-300">
                     <div class="aspect-square bg-gray-200 overflow-hidden">
-                        <img src="{{ asset('images/products/tshirt1.jpg') }}" loading="lazy" alt="Product" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        @if($product->images->count() > 0)
+                        <img src="{{ asset('storage/' . $product->images->first()->image_url) }}" 
+                             loading="lazy" 
+                             alt="{{ $product->name }}" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        @else
+                        <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                            <svg class="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        @endif
                     </div>
                     <div class="p-4">
-                        <h3 class="font-lora text-base text-gray-900 mb-1">Essential T-Shirt</h3>
-                        <p class="font-lora text-sm text-gray-600">$35.00</p>
+                        <h3 class="font-lora text-base text-gray-900 mb-1 truncate">{{ $product->name }}</h3>
+                        <div class="flex items-center justify-between">
+                            <p class="font-lora text-sm font-medium text-gray-900">${{ number_format($product->price, 2) }}</p>
+                            @if($product->stock <= 0)
+                            <span class="text-xs text-red-600 font-cg">Out of stock</span>
+                            @elseif($product->stock <= 10)
+                            <span class="text-xs text-yellow-600 font-cg">Low stock</span>
+                            @endif
+                        </div>
+                        @if($product->category)
+                        <p class="text-xs text-gray-500 font-cg mt-1">{{ $product->category->name }}</p>
+                        @endif
                     </div>
+                </a>
+                @empty
+                <div class="col-span-full text-center py-12">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                    <h3 class="mt-4 text-lg font-medium text-gray-900 font-lora">No products available yet</h3>
+                    <p class="mt-2 text-sm text-gray-500 font-cg">Check back soon for new arrivals!</p>
                 </div>
-                <!-- Repeat for more products -->
+                @endforelse
             </div>
         </div>
     </div>
@@ -140,21 +198,21 @@
             image: "{{ asset('images/hero/hero1.png') }}",
             title: "Fleece Friends",
             description: "Sweatshirts naturally require the perfect pair of sweatpants to achieve maximum comfort. Add any sweatshirt and sweatpants to your cart and <span class='font-semibold text-gray-900'>save 10%</span>!",
-            shopLink: "/shop/jackets",
-            shopText: "Shop Jackets →"
+            shopLink: "/shop",
+            shopText: "Shop Now →"
         },
         {
             image: "{{ asset('images/hero/hero2.png') }}",
             title: "Summer Collection",
             description: "Discover our latest summer styles with breathable fabrics and vibrant colors. Perfect for warm weather adventures. <span class='font-semibold text-gray-900'>Shop now</span>!",
-            shopLink: "/shop/summer",
+            shopLink: "/shop",
             shopText: "Shop Summer →"
         },
         {
             image: "{{ asset('images/hero/hero3.png') }}",
             title: "Winter Warmth",
             description: "Bundle up in style with our cozy winter collection. Premium materials meet modern design. <span class='font-semibold text-gray-900'>Save 15% on bundles</span>!",
-            shopLink: "/shop/winter",
+            shopLink: "/shop",
             shopText: "Shop Winter →"
         }
     ];
