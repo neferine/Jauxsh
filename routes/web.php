@@ -48,10 +48,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/cart/{cartItem}', [CartController::class, 'remove'])->name('cart.remove');
     Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
     
-    // Checkout routes (FIXED - removed duplicates)
+    // Checkout routes
     Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout');
     Route::post('/checkout/address', [CheckoutController::class, 'storeAddress'])->name('checkout.address.store');
-    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process')->middleware('throttle:10,1');
     Route::get('/order/{order}/confirmation', [CheckoutController::class, 'confirmation'])->name('order.confirmation');
     
     // Order routes
@@ -93,6 +93,3 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
 });
-
-// Temporary test route
-Route::get('/test-api-route', function () { return response()->json(['ok' => true]); });

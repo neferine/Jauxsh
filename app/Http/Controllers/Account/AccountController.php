@@ -14,7 +14,11 @@ class AccountController extends Controller
      * Display the user's account page.
      */
     public function index()
-    {
+    {   
+        if (!auth()->check()) {
+        return redirect()->route('login')->with('error', 'Please login to access this page.');
+        }
+        
         $user = Auth::user();
         $addresses = $user->shippingAddresses;
         $orders = $user->orders()->latest()->take(5)->get();

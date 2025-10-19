@@ -46,4 +46,21 @@
     <!-- Page Transitions Script -->
      <div id="sidebarPortal"></div>
 </body>
+
+@auth
+<script>
+    // Prevent back button after logout
+    window.history.pushState(null, "", window.location.href);
+    window.onpopstate = function() {
+        window.history.pushState(null, "", window.location.href);
+    };
+    
+    // Alternative: Force reload on back button
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted || performance.getEntriesByType("navigation")[0].type === 'back_forward') {
+            window.location.reload();
+        }
+    });
+</script>
+@endauth
 </html>

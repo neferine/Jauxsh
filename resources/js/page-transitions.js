@@ -204,6 +204,16 @@ class PageTransition {
 
 // Initialize on DOM load
 document.addEventListener('DOMContentLoaded', () => {
+    // Check if we're in admin area
+    const isAdmin = window.location.pathname.startsWith('/admin') || 
+                    document.body.classList.contains('admin-layout') ||
+                    document.body.dataset.layout === 'admin';
+    
+    if (isAdmin) {
+        console.log('Admin area detected, skipping page transitions');
+        return;
+    }
+    
     console.log('PageTransition initializing...');
     window.pageTransition = new PageTransition();
     console.log('PageTransition initialized successfully');
@@ -214,6 +224,14 @@ if (document.readyState === 'loading') {
     // Still loading, wait for DOMContentLoaded
 } else {
     // DOM already loaded
-    console.log('DOM already loaded, initializing PageTransition immediately');
-    window.pageTransition = new PageTransition();
+    const isAdmin = window.location.pathname.startsWith('/admin') || 
+                    document.body.classList.contains('admin-layout') ||
+                    document.body.dataset.layout === 'admin';
+    
+    if (!isAdmin) {
+        console.log('DOM already loaded, initializing PageTransition immediately');
+        window.pageTransition = new PageTransition();
+    } else {
+        console.log('Admin area detected, skipping page transitions');
+    }
 }
