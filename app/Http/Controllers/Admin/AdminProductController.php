@@ -75,8 +75,17 @@ class AdminProductController extends Controller
     public function show(Product $product)
     {
         $product->load(['category', 'images']);
-        return view('admin.products.show', compact('product'));
+
+        // Get related products from the same category (excluding current one)
+        $relatedProducts = Product::with(['images', 'category'])
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->limit(4)
+            ->get();
+
+        return view('pages.products.show', compact('product', 'relatedProducts'));
     }
+
     
     public function edit(Product $product)
     {

@@ -33,7 +33,7 @@
                            name="address_line1" 
                            id="address_line1" 
                            value="{{ old('address_line1') }}"
-                           placeholder="Street address, P.O. box"
+                           placeholder="Street address, Baranggay"
                            class="w-full px-4 py-3 font-lora text-gray-900 bg-white border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent @error('address_line1') border-red-500 @enderror">
                     @error('address_line1')
                         <p class="mt-1 text-sm text-red-600 font-lora">{{ $message }}</p>

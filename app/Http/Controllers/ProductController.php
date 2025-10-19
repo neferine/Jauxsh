@@ -8,64 +8,88 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function home()
-    {
-        $featuredProducts = Product::with(['category', 'images'])
-            ->where('stock', '>', 0)
-            ->latest()
-            ->take(8)
-            ->get();
-            
-        $categories = Category::whereNull('parent_id')->get();
-            
-        return view('pages.home', compact('featuredProducts', 'categories'));
-    }
-    
     public function index(Request $request)
     {
-        $query = Product::with(['category', 'images'])->where('stock', '>', 0);
-        
-        // Search functionality
-        if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('description', 'like', '%' . $request->search . '%');
-        }
-        
-        // Category filter
+        $query = Product::with(['images', 'category', 'variants']);
+
+        // Filter by category
         if ($request->has('category')) {
-            $query->where('category_id', $request->category);
+            $query->whereHas('category', function($q) use ($request) {
+                $q->where('slug', $request->category)
+                  ->orWhere('id', $request->category);
+            });
         }
-        
-        // Price range filter
-        if ($request->has('min_price')) {
-            $query->where('price', '>=', $request->min_price);
+
+        // Filter by collection
+        if ($request->has('collection')) {
+            $query->whereHas('collections', function($q) use ($request) {
+                $q->where('slug', $request->collection)
+                  ->orWhere('id', $request->collection);
+            });
         }
-        if ($request->has('max_price')) {
-            $query->where('price', '<=', $request->max_price);
+
+        // Search
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
         }
-        
+
         // Sorting
-        $sortBy = $request->get('sort', 'created_at');
-        $sortOrder = $request->get('order', 'desc');
-        $query->orderBy($sortBy, $sortOrder);
-        
+        $sort = $request->get('sort', 'newest');
+        switch ($sort) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'name':
+                $query->orderBy('name', 'asc');
+                break;
+            case 'newest':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
         $products = $query->paginate(12);
-        $categories = Category::all();
-        
+        $categories = Category::whereNull('parent_id')->with('children')->get();
+
         return view('pages.products.index', compact('products', 'categories'));
     }
-    
+
     public function show($id)
     {
-        $product = Product::with(['category', 'images'])->findOrFail($id);
-        
-        $relatedProducts = Product::with('images')
+        $product = Product::with([
+            'images', 
+            'category', 
+            'variants' => function($query) {
+                $query->where('stock', '>', 0); // Only show in-stock variants
+            },
+            'collections'
+        ])->findOrFail($id);
+
+        // Get available colors and sizes
+        $availableColors = $product->available_colors;
+        $availableSizes = $product->available_sizes;
+
+        // Get related products (same category, excluding current product)
+        $relatedProducts = Product::with(['images', 'category'])
             ->where('category_id', $product->category_id)
-            ->where('id', '!=', $id)
-            ->where('stock', '>', 0)
-            ->take(4)
+            ->where('id', '!=', $product->id)
+            ->where('stock', '>', 0) // Only show in-stock products
+            ->inRandomOrder()
+            ->limit(4)
             ->get();
-            
-        return view('pages.products.show', compact('product', 'relatedProducts'));
+
+        return view('pages.products.show', compact(
+            'product', 
+            'availableColors', 
+            'availableSizes',
+            'relatedProducts'
+        ));
     }
 }

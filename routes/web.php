@@ -16,11 +16,17 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Account\AccountController;
+use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\Admin\AdminCollectionController;
+use App\Http\Controllers\Admin\AdminProductVariantController;
 
 // Public routes (guest accessible)
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+
+Route::get('/collections', [CollectionController::class, 'index'])->name('collections.index');
+Route::get('/collections/{collection:slug}', [CollectionController::class, 'show'])->name('collections.show');
 
 Route::get('/about-us', [PageController::class, 'about'])->name('about');
 Route::get('/terms', [PageController::class, 'terms'])->name('terms');
@@ -76,10 +82,30 @@ Route::middleware(['auth'])->group(function () {
 
 // Admin routes (require auth + admin middleware)
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+
+    // Collections management
+   // Collection routes
+    Route::resource('collections', AdminCollectionController::class);
+    
+    // Product management
+    Route::post('collections/{collection}/attach-product', [AdminCollectionController::class, 'attachProduct'])->name('collections.attachProduct');
+
+    Route::delete('collections/{collection}/detach-product/{product}', [AdminCollectionController::class, 'detachProduct'])->name('collections.detachProduct');
+
+    // Product Variants management (nested under products)
+    Route::prefix('products/{product}')->name('products.')->group(function () {
+        Route::get('variants', [AdminProductVariantController::class, 'index'])->name('variants.index');
+        Route::get('variants/create', [AdminProductVariantController::class, 'create'])->name('variants.create');
+        Route::post('variants', [AdminProductVariantController::class, 'store'])->name('variants.store');
+        Route::get('variants/{variant}/edit', [AdminProductVariantController::class, 'edit'])->name('variants.edit');
+        Route::put('variants/{variant}', [AdminProductVariantController::class, 'update'])->name('variants.update');
+        Route::delete('variants/{variant}', [AdminProductVariantController::class, 'destroy'])->name('variants.destroy');
+    });
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Products management
-    Route::resource('products', AdminProductController::class)->except(['show']);
+    Route::resource('products', AdminProductController::class);
     
     // Categories management
     Route::resource('categories', CategoryController::class)->except(['show']);

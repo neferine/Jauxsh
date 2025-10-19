@@ -19,14 +19,20 @@
     </style>
 </head>
 <body class="relative min-h-screen bg-cover bg-center bg-no-repeat scroll-smooth">
-
+        
         <!-- Background overlays -->
         <div class="absolute inset-0 bg-[#4d9b91]/20 pointer-events-none z-0"></div>
         <div class="absolute inset-0 noise-overlay pointer-events-none z-0"></div>
         
-        <!-- Navbar -->
+
+            <!-- Navbar -->
         @include('layouts.navbar')
-       
+
+        @include('components.slider-backdrop')
+        @include('components.shop-slider')
+        @auth
+            @include('components.cart-slider')
+        @endauth
         <!-- Main Content -->
        <main class="container mx-auto px-8 py-5 pt-24">
             @yield('content')

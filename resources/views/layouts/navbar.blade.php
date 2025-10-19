@@ -4,9 +4,9 @@
       <!-- Left Nav -->
       <ul class="flex space-x-10">
         <li class="nav-item">
-          <a href="{{ route('products.index') }}" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase">
-            Shop
-          </a>
+            <a href="#" onclick="event.preventDefault(); openShopSlider();" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase">
+                Shop
+            </a>
         </li>
         <li class="nav-item">
           <a href="{{ route('about') }}" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase">
@@ -24,7 +24,9 @@
 
       <!-- Right Nav -->
       <ul class="flex space-x-10">
-        <!-- Currency Dropdown -->
+        <!-- Temporary Removed  
+         Currency Dropdown 
+           Dropdown Menu 
         <li class="nav-item relative">
           <a>
             <button id="currencyBtn"
@@ -32,7 +34,7 @@
               <span id="currentCurrency">USD $</span>
             </button>
           </a>
-          <!-- Dropdown Menu -->
+        
           <div id="currencyDropdown"
             class="hidden absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded shadow-lg min-w-[120px] z-50">
             <button onclick="changeCurrency('USD', '$')"
@@ -58,6 +60,8 @@
           </div>
         </li>
 
+        -->
+        
         <li class="nav-item">
           <a href="#" id="searchNavBtn"
             class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase">Search</a>
@@ -92,9 +96,9 @@
 
         @auth
         <li class="nav-item">
-          <a href="{{ route('cart.index') }}" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase relative">
-            Cart
-            <span id="cartCount" class="absolute -top-2 -right-3 bg-[#1fac99ff] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden">0</span>
+          <a href="#" onclick="event.preventDefault(); openCartSlider();" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase relative">
+              Cart
+              <span id="cartCount" class="absolute -top-2 -right-3 bg-[#1fac99ff] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden">0</span>
           </a>
         </li>
         @endauth
