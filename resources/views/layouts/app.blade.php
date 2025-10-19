@@ -28,7 +28,7 @@
         @include('layouts.navbar')
        
         <!-- Main Content -->
-        <main class="relative z-10 container mx-auto px-8 py-5">
+       <main class="container mx-auto px-8 py-5 pt-24">
             @yield('content')
         </main>
        
@@ -44,5 +44,6 @@
     @stack('scripts')
 
     <!-- Page Transitions Script -->
+     <div id="sidebarPortal"></div>
 </body>
 </html>

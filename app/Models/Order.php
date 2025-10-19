@@ -32,6 +32,12 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    // Optional alias for backward compatibility
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
     // Status constants
     const STATUS_PENDING = 'pending';
     const STATUS_PROCESSING = 'processing';

@@ -180,7 +180,7 @@
                                 {{ $product->name }}
                             </h3>
                             <div class="flex items-center justify-between">
-                                <p class="font-lora text-lg font-semibold text-gray-900">
+                               <p class="font-lora text-lg font-semibold text-gray-900 price-display" data-original-price="{{ $product->price }}">
                                     ${{ number_format($product->price, 2) }}
                                 </p>
                                 <span class="text-xs text-gray-500 font-cg">

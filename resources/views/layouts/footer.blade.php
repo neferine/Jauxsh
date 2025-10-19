@@ -11,7 +11,7 @@
                 <span class="font-semibold text-white text-base font-pf">Social</span>
                 <div class="mt-2 flex flex-col">
                     <ul>
-                        <li><a href="#" class="hover:underline text-gray-200 text-base hover:text-white font-cg">Instagram</a></li>
+                        <li><a href="https://www.instagram.com/jau_xsh/" class="hover:underline text-gray-200 text-base hover:text-white font-cg">Instagram</a></li>
                         <li><a href="#" class="hover:underline text-gray-200 text-base hover:text-white font-cg">Facebook</a></li>
                     </ul>
                 </div>

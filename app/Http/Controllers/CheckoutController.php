@@ -12,97 +12,89 @@ use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
-    public function __construct()
+    // Show checkout page
+    public function show()
     {
-        $this->middleware('auth');
-    }
-    
-    public function index()
-    {
-        $cart = Cart::with(['cartItems.product.images'])
-            ->where('user_id', Auth::id())
-            ->first();
-            
+        $user = Auth::user();
+        $cart = Cart::where('user_id', $user->id)->with('cartItems.product')->first();
+        
         if (!$cart || $cart->cartItems->isEmpty()) {
-            return redirect()->route('products.index')->with('error', 'Your cart is empty.');
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty');
         }
-        
-        // Validate stock for all items
-        foreach ($cart->cartItems as $item) {
-            if ($item->product->stock < $item->quantity) {
-                return redirect()->route('cart.index')
-                    ->with('error', "Not enough stock for {$item->product->name}");
-            }
-        }
-        
-        $total = $cart->cartItems->sum(function($item) {
-            return $item->quantity * $item->product->price;
+
+        $shippingAddresses = ShippingAddress::where('user_id', $user->id)->get();
+        $cartTotal = $cart->cartItems->sum(function($item) {
+            return $item->product->price * $item->quantity;
         });
-        
-        $shippingAddresses = ShippingAddress::where('user_id', Auth::id())->get();
-        
-        return view('pages.checkout', compact('cart', 'total', 'shippingAddresses'));
+
+        return view('checkout.index', [
+            'cart' => $cart,
+            'shippingAddresses' => $shippingAddresses,
+            'cartTotal' => $cartTotal
+        ]);
     }
-    
-    public function store(Request $request)
+
+    // Store new shipping address
+    public function storeAddress(Request $request)
     {
         $validated = $request->validate([
-            'shipping_address_id' => ['nullable', 'exists:shipping_addresses,id'],
-            'address_line1' => ['required_without:shipping_address_id', 'string', 'max:255'],
-            'address_line2' => ['nullable', 'string', 'max:255'],
-            'city' => ['required_without:shipping_address_id', 'string', 'max:100'],
-            'postal_code' => ['required_without:shipping_address_id', 'string', 'max:20'],
-            'country' => ['required_without:shipping_address_id', 'string', 'max:100'],
-            'phone_number' => ['required_without:shipping_address_id', 'string', 'max:20'],
-            'save_address' => ['boolean'],
+            'address_line1' => 'required|string|max:255',
+            'address_line2' => 'nullable|string|max:255',
+            'city' => 'required|string|max:255',
+            'postal_code' => 'required|string|max:20',
+            'country' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:20',
         ]);
-        
-        $cart = Cart::with('cartItems.product')
-            ->where('user_id', Auth::id())
-            ->first();
-            
+
+        ShippingAddress::create([
+            'user_id' => Auth::id(),
+            ...$validated
+        ]);
+
+        return redirect()->route('checkout')->with('success', 'Address added successfully');
+    }
+
+    // Process checkout
+    public function process(Request $request)
+    {
+        $validated = $request->validate([
+            'shipping_address_id' => 'required|exists:shipping_addresses,id',
+            'payment_method' => 'required|in:credit_card,debit_card,paypal,bank_transfer',
+        ]);
+
+        $user = Auth::user();
+        $cart = Cart::where('user_id', $user->id)->with('cartItems.product')->first();
+
         if (!$cart || $cart->cartItems->isEmpty()) {
-            return redirect()->route('products.index')->with('error', 'Your cart is empty.');
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty');
         }
-        
-        DB::beginTransaction();
-        
+
+        // Verify shipping address belongs to user
+        $shippingAddress = ShippingAddress::where('id', $validated['shipping_address_id'])
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$shippingAddress) {
+            return redirect()->back()->with('error', 'Invalid shipping address');
+        }
+
         try {
-            // Save shipping address if requested
-            if ($request->boolean('save_address') && !$request->has('shipping_address_id')) {
-                ShippingAddress::create([
-                    'user_id' => Auth::id(),
-                    'address_line1' => $validated['address_line1'],
-                    'address_line2' => $validated['address_line2'] ?? null,
-                    'city' => $validated['city'],
-                    'postal_code' => $validated['postal_code'],
-                    'country' => $validated['country'],
-                    'phone_number' => $validated['phone_number'],
-                ]);
-            }
-            
-            $total = 0;
-            
-            // Validate stock and calculate total
-            foreach ($cart->cartItems as $item) {
-                $product = $item->product->lockForUpdate()->find($item->product->id);
-                
-                if ($product->stock < $item->quantity) {
-                    throw new \Exception("Not enough stock for {$product->name}");
-                }
-                
-                $total += $item->quantity * $product->price;
-            }
-            
+            DB::beginTransaction();
+
+            // Calculate total
+            $totalAmount = $cart->cartItems->sum(function($item) {
+                return $item->product->price * $item->quantity;
+            });
+
             // Create order
             $order = Order::create([
-                'user_id' => Auth::id(),
+                'user_id' => $user->id,
                 'order_date' => now(),
                 'status' => 'pending',
-                'total_amount' => $total,
+                'total_amount' => $totalAmount,
             ]);
-            
-            // Create order items and update stock
+
+            // Create order items
             foreach ($cart->cartItems as $item) {
                 OrderItem::create([
                     'order_id' => $order->id,
@@ -110,22 +102,34 @@ class CheckoutController extends Controller
                     'quantity' => $item->quantity,
                     'price' => $item->product->price,
                 ]);
-                
+
                 // Reduce stock
                 $item->product->decrement('stock', $item->quantity);
             }
-            
+
             // Clear cart
             $cart->cartItems()->delete();
-            
+
             DB::commit();
-            
-            return redirect()->route('orders.show', $order->id)
+
+            return redirect()->route('order.confirmation', $order->id)
                 ->with('success', 'Order placed successfully!');
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', $e->getMessage());
+            return redirect()->back()->with('error', 'An error occurred during checkout');
         }
+    }
+
+    // Show order confirmation
+    public function confirmation($orderId)
+    {
+        $order = Order::with('items.product', 'user')->findOrFail($orderId);
+
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return view('order.confirmation', ['order' => $order]);
     }
 }

@@ -4,7 +4,7 @@
 @section('content')
 <div class="w-full">
     <!-- Breadcrumb -->
-    <div class="bg-neutral-50 border-b border-gray-200 py-4">
+    <div class="py-4">
         <div class="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl">
             <nav class="flex items-center space-x-2 text-sm font-cg">
                 <a href="{{ route('home') }}" class="text-gray-500 hover:text-gray-900 transition-colors">Home</a>
@@ -86,7 +86,7 @@
                 </h1>
 
                 <div class="flex items-baseline gap-4 mb-6">
-                    <p class="font-lora text-3xl font-bold text-gray-900">
+                    <p class="font-lora text-lg font-semibold text-gray-900 price-display" data-original-price="{{ $product->price }}">
                         ${{ number_format($product->price, 2) }}
                     </p>
                     @if($product->stock > 0)
