@@ -28,6 +28,8 @@
             <!-- Navbar -->
         @include('layouts.navbar')
 
+        @include('components.search-bar')
+        
         @include('components.slider-backdrop')
         @include('components.shop-slider')
         @auth

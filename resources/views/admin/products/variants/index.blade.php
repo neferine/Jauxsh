@@ -1,140 +1,155 @@
 @extends('layouts.admin')
 
 @section('title', 'Variants - ' . $product->name)
+@section('page-title', 'Product Variants')
+@section('page-description', 'Manage variants for ' . $product->name)
 
 @section('content')
-<div class="container mx-auto px-6 py-8">
-    <div class="mb-6">
-        <a href="{{ route('admin.products.index') }}" 
-           class="text-gray-600 hover:text-gray-900 flex items-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex justify-between items-start">
+        <div>
+            <div class="flex items-center gap-3 mb-3">
+                <a href="/admin/products" class="text-[#1FAC99] hover:text-[#1D433F] font-cg text-sm">
+                    ← Back to Products
+                </a>
+            </div>
+            <h2 class="text-2xl font-bold text-[#1D433F] font-lora">{{ $product->name }}</h2>
+            <p class="text-gray-600 font-cg mt-1">
+                Base Price: <span class="font-semibold text-gray-900">${{ number_format($product->price, 2) }}</span>
+                | Category: <span class="font-semibold text-gray-900">{{ $product->category->name ?? 'N/A' }}</span>
+            </p>
+        </div>
+        <a href="/admin/products/{{ $product->id }}/variants/create" 
+           class="inline-flex items-center px-6 py-3 bg-[#1FAC99] text-white font-cg rounded-lg hover:bg-[#1D433F] transition-colors shadow-sm">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
             </svg>
-            Back to Products
+            Add Variant
         </a>
     </div>
 
-    <div class="bg-white rounded-lg shadow-md p-8 mb-6">
-        <div class="flex justify-between items-start mb-6">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Product Variants</h1>
-                <p class="text-gray-600">
-                    Product: <strong>{{ $product->name }}</strong> | 
-                    Base Price: <strong>${{ number_format($product->price, 2) }}</strong>
-                </p>
-            </div>
-            <a href="{{ route('admin.products.variants.create', $product) }}" 
-               class="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                Add Variant
-            </a>
-        </div>
+    @if(session('success'))
+    <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+        <p class="text-green-800 font-cg text-sm">{{ session('success') }}</p>
+    </div>
+    @endif
 
-        @if(session('success'))
-        <div class="mb-6 p-4 bg-green-100 text-green-700 rounded-lg">
-            {{ session('success') }}
-        </div>
-        @endif
-
+    <!-- Variants Table -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
         @if($variants->count() > 0)
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gray-50 border-b border-gray-200">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Preview</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SKU</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Color</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <tr class="text-left text-xs font-semibold text-gray-600 uppercase tracking-wider font-cg">
+                        <th class="px-6 py-4">Preview</th>
+                        <th class="px-6 py-4">SKU</th>
+                        <th class="px-6 py-4">Size</th>
+                        <th class="px-6 py-4">Color</th>
+                        <th class="px-6 py-4">Price</th>
+                        <th class="px-6 py-4">Stock</th>
+                        <th class="px-6 py-4 text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="divide-y divide-gray-100">
                     @foreach($variants as $variant)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap">
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <!-- Preview -->
+                        <td class="px-6 py-4">
                             @if($variant->image_url)
                             <img src="{{ asset('storage/' . $variant->image_url) }}" 
-                                 alt="{{ $variant->display_name }}"
-                                 class="w-16 h-16 object-cover rounded border border-gray-200">
+                                 alt="{{ $variant->color }}"
+                                 class="w-12 h-12 rounded-lg object-cover border border-gray-200">
                             @elseif($variant->color_hex)
-                            <div class="w-16 h-16 rounded border-2 border-gray-300"
+                            <div class="w-12 h-12 rounded-lg border-2 border-gray-300 shadow-sm"
                                  style="background-color: {{ $variant->color_hex }}"
                                  title="{{ $variant->color }}"></div>
                             @else
-                            <div class="w-16 h-16 rounded bg-gray-100 flex items-center justify-center">
-                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="w-12 h-12 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                 </svg>
                             </div>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-mono text-gray-900">{{ $variant->sku }}</span>
+
+                        <!-- SKU -->
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-mono text-gray-900 font-cg">{{ $variant->sku }}</div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            @if($variant->color)
-                            <div class="flex items-center gap-2">
-                                @if($variant->color_hex)
-                                <span class="w-6 h-6 rounded-full border border-gray-300 inline-block"
-                                      style="background-color: {{ $variant->color_hex }}"></span>
-                                @endif
-                                <span class="text-sm text-gray-900">{{ $variant->color }}</span>
-                            </div>
-                            @else
-                            <span class="text-sm text-gray-400">N/A</span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+
+                        <!-- Size -->
+                        <td class="px-6 py-4">
                             @if($variant->size)
-                            <span class="px-3 py-1 bg-gray-100 text-gray-900 text-sm font-semibold rounded">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#d8e8e7] text-[#1D433F] font-cg">
                                 {{ $variant->size }}
                             </span>
                             @else
-                            <span class="text-sm text-gray-400">N/A</span>
+                            <span class="text-xs text-gray-400 font-cg">N/A</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm">
+
+                        <!-- Color -->
+                        <td class="px-6 py-4">
+                            @if($variant->color)
+                            <div class="flex items-center gap-2">
+                                @if($variant->color_hex)
+                                <span class="w-5 h-5 rounded-full border-2 border-gray-300 shadow-sm inline-block"
+                                      style="background-color: {{ $variant->color_hex }}"></span>
+                                @endif
+                                <span class="text-sm text-gray-900 font-cg">{{ $variant->color }}</span>
+                            </div>
+                            @else
+                            <span class="text-xs text-gray-400 font-cg">N/A</span>
+                            @endif
+                        </td>
+
+                        <!-- Price -->
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-cg">
                                 <div class="font-semibold text-gray-900">
-                                    ${{ number_format($variant->final_price, 2) }}
+                                    ${{ number_format($product->price + $variant->price_adjustment, 2) }}
                                 </div>
                                 @if($variant->price_adjustment != 0)
-                                <div class="text-xs {{ $variant->price_adjustment > 0 ? 'text-red-600' : 'text-green-600' }}">
+                                <div class="text-xs {{ $variant->price_adjustment > 0 ? 'text-red-600' : 'text-green-600' }} font-cg">
                                     {{ $variant->price_adjustment > 0 ? '+' : '' }}${{ number_format($variant->price_adjustment, 2) }}
                                 </div>
                                 @endif
                             </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-3 py-1 text-sm rounded-full
-                                @if($variant->stock > 10) bg-green-100 text-green-800
-                                @elseif($variant->stock > 0) bg-yellow-100 text-yellow-800
-                                @else bg-red-100 text-red-800
-                                @endif">
+
+                        <!-- Stock -->
+                        <td class="px-6 py-4">
+                            @if($variant->stock > 10)
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 font-cg">
                                 {{ $variant->stock }} in stock
                             </span>
+                            @elseif($variant->stock > 0)
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 font-cg">
+                                {{ $variant->stock }} low stock
+                            </span>
+                            @else
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 font-cg">
+                                Out of stock
+                            </span>
+                            @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <div class="flex items-center gap-2">
-                                <a href="{{ route('admin.products.variants.edit', [$product, $variant]) }}" 
-                                   class="text-blue-600 hover:text-blue-800">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                    </svg>
+
+                        <!-- Actions -->
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end space-x-3">
+                                <a href="/admin/products/{{ $product->id }}/variants/{{ $variant->id }}/edit" 
+                                   class="text-[#1FAC99] hover:text-[#1D433F] font-cg text-sm hover:underline">
+                                    Edit
                                 </a>
-                                <form action="{{ route('admin.products.variants.destroy', [$product, $variant]) }}" 
+                                <form action="/admin/products/{{ $product->id }}/variants/{{ $variant->id }}" 
                                       method="POST" 
-                                      onsubmit="return confirm('Are you sure you want to delete this variant?')">
+                                      onsubmit="return confirm('Are you sure you want to delete this variant?')" 
+                                      class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-800">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                        </svg>
+                                    <button type="submit" class="text-red-600 hover:text-red-800 font-cg text-sm hover:underline">
+                                        Delete
                                     </button>
                                 </form>
                             </div>
@@ -146,46 +161,37 @@
         </div>
 
         <!-- Summary Stats -->
-        <div class="mt-6 pt-6 border-t border-gray-200 grid grid-cols-3 gap-4">
-            <div class="text-center">
-                <div class="text-2xl font-bold text-gray-900">{{ $variants->count() }}</div>
-                <div class="text-sm text-gray-600">Total Variants</div>
+        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 grid grid-cols-3 gap-6">
+            <div>
+                <div class="text-2xl font-bold text-[#1D433F] font-lora">{{ $variants->count() }}</div>
+                <p class="text-sm text-gray-600 font-cg">Total Variants</p>
             </div>
-            <div class="text-center">
-                <div class="text-2xl font-bold text-gray-900">{{ $variants->sum('stock') }}</div>
-                <div class="text-sm text-gray-600">Total Stock</div>
+            <div>
+                <div class="text-2xl font-bold text-[#1D433F] font-lora">{{ $variants->sum('stock') }}</div>
+                <p class="text-sm text-gray-600 font-cg">Total Stock</p>
             </div>
-            <div class="text-center">
-                <div class="text-2xl font-bold text-gray-900">{{ $variants->unique('color')->count() }}</div>
-                <div class="text-sm text-gray-600">Colors Available</div>
+            <div>
+                <div class="text-2xl font-bold text-[#1D433F] font-lora">{{ $variants->unique('color')->count() }}</div>
+                <p class="text-sm text-gray-600 font-cg">Colors Available</p>
             </div>
         </div>
 
         @else
-        <div class="text-center py-12">
-            <svg class="mx-auto w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="px-6 py-12 text-center">
+            <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
             </svg>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">No variants yet</h3>
-            <p class="text-gray-600 mb-4">Start by adding colors and sizes for this product</p>
-            <a href="{{ route('admin.products.variants.create', $product) }}" 
-               class="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            <h3 class="mt-4 text-lg font-medium text-gray-900 font-lora">No variants yet</h3>
+            <p class="mt-2 text-sm text-gray-500 font-cg mb-6">Start by adding colors and sizes for this product</p>
+            <a href="/admin/products/{{ $product->id }}/variants/create" 
+               class="inline-flex items-center px-6 py-3 bg-[#1FAC99] text-white font-cg rounded-lg hover:bg-[#1D433F] transition-colors shadow-sm">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                 </svg>
                 Add First Variant
             </a>
         </div>
         @endif
-    </div>
-
-    <!-- Quick Add Multiple Variants -->
-    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h3 class="text-lg font-semibold text-blue-900 mb-2">💡 Pro Tip: Bulk Add Variants</h3>
-        <p class="text-blue-800 text-sm">
-            If you need to add multiple color/size combinations quickly, you can use the bulk variant creator 
-            or create a seeder to populate variants programmatically.
-        </p>
     </div>
 </div>
 @endsection

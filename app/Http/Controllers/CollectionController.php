@@ -17,7 +17,7 @@ class CollectionController extends Controller
                                  ->withCount('products')
                                  ->get();
         
-        return view('collections.index', compact('collections'));
+        return view('pages.collections.index', compact('collections'));
     }
 
     public function show(Collection $collection)
@@ -30,6 +30,6 @@ class CollectionController extends Controller
                               ->with(['images', 'variants'])
                               ->paginate(12);
         
-        return view('collections.show', compact('collection', 'products'));
+        return view('pages.collections.show', compact('collection', 'products'));
     }
 }

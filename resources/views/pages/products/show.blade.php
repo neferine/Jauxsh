@@ -4,40 +4,34 @@
 @section('content')
 <div class="w-full">
     <!-- Breadcrumb -->
-    <div class="py-4">
+    <div class="bg-gray-50 py-4 border-b border-gray-200">
         <div class="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl">
-            <nav class="flex items-center space-x-2 text-sm font-cg">
-                <a href="{{ route('home') }}" class="text-gray-500 hover:text-gray-900 transition-colors">Home</a>
-                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-                <a href="{{ route('products.index') }}" class="text-gray-500 hover:text-gray-900 transition-colors">Shop</a>
+            <nav class="flex items-center space-x-2 text-xs font-cg uppercase tracking-wide">
+                <a href="{{ route('home') }}" class="text-gray-600 hover:text-gray-900 transition-colors">Home</a>
+                <span class="text-gray-400">/</span>
+                <a href="{{ route('products.index') }}" class="text-gray-600 hover:text-gray-900 transition-colors">Shop</a>
                 @if($product->category)
-                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-                <span class="text-gray-500">{{ $product->category->name }}</span>
+                <span class="text-gray-400">/</span>
+                <a href="{{ route('products.index') }}?category={{ $product->category->id }}" class="text-gray-600 hover:text-gray-900 transition-colors">{{ $product->category->name }}</a>
                 @endif
-                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-                <span class="text-gray-900 font-medium">{{ $product->name }}</span>
+                <span class="text-gray-400">/</span>
+                <span class="text-gray-900 font-semibold">{{ $product->name }}</span>
             </nav>
         </div>
     </div>
 
     <!-- Product Details -->
-    <div class="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl py-12">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+    <div class="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
             <!-- Image Gallery -->
             <div class="space-y-4">
                 <!-- Main Image -->
-                <div class="aspect-square bg-gray-100 rounded-sm overflow-hidden border border-gray-200 relative">
+                <div class="aspect-square bg-gray-100 rounded-sm overflow-hidden border border-gray-200 relative group">
                     @if($product->images->count() > 0)
                     <img id="mainImage" 
                          src="{{ asset('storage/' . $product->images->first()->image_url) }}" 
                          alt="{{ $product->name }}"
-                         class="w-full h-full object-cover">
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                     @else
                     <div class="w-full h-full flex items-center justify-center">
                         <svg class="w-24 h-24 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,11 +45,11 @@
                         <div id="variantStockBadge" class="absolute top-4 right-4"></div>
                     @else
                         @if($product->stock <= 0)
-                        <div class="absolute top-4 right-4 bg-red-600 text-white text-xs font-cg px-4 py-2 rounded-full">
+                        <div class="absolute top-4 right-4 bg-red-600 text-white text-xs font-semibold font-cg px-3 py-1.5 rounded-full">
                             Out of Stock
                         </div>
                         @elseif($product->stock <= 10)
-                        <div class="absolute top-4 right-4 bg-yellow-500 text-white text-xs font-cg px-4 py-2 rounded-full">
+                        <div class="absolute top-4 right-4 bg-yellow-500 text-white text-xs font-semibold font-cg px-3 py-1.5 rounded-full">
                             Only {{ $product->stock }} Left
                         </div>
                         @endif
@@ -67,7 +61,7 @@
                 <div class="grid grid-cols-4 gap-3">
                     @foreach($product->images as $image)
                     <button onclick="changeImage('{{ asset('storage/' . $image->image_url) }}')"
-                            class="aspect-square bg-gray-100 rounded-sm overflow-hidden border-2 border-gray-200 hover:border-gray-900 transition-colors cursor-pointer">
+                            class="aspect-square bg-gray-100 rounded-sm overflow-hidden border-2 border-gray-200 hover:border-[#1D433F] transition-colors cursor-pointer hover:shadow-md">
                         <img src="{{ asset('storage/' . $image->image_url) }}" 
                              alt="{{ $product->name }}"
                              class="w-full h-full object-cover">
@@ -80,46 +74,44 @@
             <!-- Product Information -->
             <div>
                 @if($product->category)
-                <p class="text-sm text-gray-500 font-cg uppercase tracking-wider mb-3">
+                <p class="text-xs text-gray-500 font-cg uppercase tracking-widest mb-2">
                     {{ $product->category->name }}
                 </p>
                 @endif
 
-                <h1 class="font-cg text-4xl md:text-5xl font-bold tracking-tight uppercase text-gray-900 mb-4">
+                <h1 class="font-cg text-4xl md:text-5xl font-bold tracking-tight uppercase text-gray-900 mb-2 leading-tight">
                     {{ $product->name }}
                 </h1>
 
-                <div class="flex items-baseline gap-4 mb-6">
-                    <p class="font-lora text-lg font-semibold text-gray-900" id="productPrice" data-base-price="{{ $product->price }}">
+                <!-- Price and Stock -->
+                <div class="mb-6 pt-4">
+                    <p class="font-lora text-3xl font-semibold text-gray-900 mb-2" id="productPrice" data-base-price="{{ $product->price }}">
                         ${{ number_format($product->price, 2) }}
                     </p>
                     @if(!$product->has_variants)
                         @if($product->stock > 0)
-                        <p class="text-sm text-green-600 font-cg">
+                        <p class="text-sm text-green-600 font-cg font-medium">
                             ✓ In Stock ({{ $product->stock }} available)
                         </p>
                         @else
-                        <p class="text-sm text-red-600 font-cg">
-                            ✗ Out of Stock
+                        <p class="text-sm text-red-600 font-cg font-medium">
+                            Out of Stock
                         </p>
                         @endif
                     @else
-                        <p id="stockStatus" class="text-sm font-cg"></p>
+                        <p id="stockStatus" class="text-sm font-cg font-medium"></p>
                     @endif
                 </div>
 
                 <!-- Description -->
-                <div class="mb-8 pb-8 border-b border-gray-200">
-                    <h3 class="font-cg text-sm font-bold uppercase tracking-wider text-gray-900 mb-3">
-                        Description
-                    </h3>
-                    <p class="text-gray-600 font-lora leading-relaxed">
+                <div class="mb-8 pb-8 border-b-2 border-gray-200">
+                    <p class="text-gray-600 font-lora leading-relaxed text-base">
                         {{ $product->description ?? 'No description available for this product.' }}
                     </p>
                 </div>
 
                 <!-- Add to Cart Form -->
-                <form action="{{ route('cart.add') }}" method="POST" id="addToCartForm" class="space-y-6">
+                <form action="{{ route('cart.add') }}" method="POST" id="addToCartForm" class="space-y-8">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <input type="hidden" name="product_variant_id" id="selectedVariantId" value="">
@@ -128,13 +120,13 @@
                         <!-- Color Selection -->
                         @if($product->available_colors->isNotEmpty())
                         <div>
-                            <label class="block font-cg text-sm font-bold uppercase tracking-wider text-gray-900 mb-3">
+                            <label class="block font-cg text-xs font-bold uppercase tracking-widest text-gray-900 mb-4">
                                 Color: <span id="selectedColorName" class="text-gray-500 font-normal">Select a color</span>
                             </label>
                             <div class="flex flex-wrap gap-3">
                                 @foreach($product->available_colors as $color)
                                 <button type="button" 
-                                        class="color-option group relative w-12 h-12 rounded-full border-2 border-gray-300 hover:border-gray-900 transition-all overflow-hidden"
+                                        class="color-option group relative w-12 h-12 rounded-full border-2 border-gray-300 hover:border-[#1D433F] transition-all overflow-hidden"
                                         style="background-color: {{ $color->color_hex ?? '#ccc' }}"
                                         data-color="{{ $color->color }}"
                                         data-hex="{{ $color->color_hex }}"
@@ -155,13 +147,13 @@
                         <!-- Size Selection -->
                         @if($product->available_sizes->isNotEmpty())
                         <div>
-                            <label class="block font-cg text-sm font-bold uppercase tracking-wider text-gray-900 mb-3">
+                            <label class="block font-cg text-xs font-bold uppercase tracking-widest text-gray-900 mb-4">
                                 Size: <span id="selectedSizeName" class="text-gray-500 font-normal">Select a size</span>
                             </label>
                             <div class="flex flex-wrap gap-3">
                                 @foreach($product->available_sizes as $size)
                                 <button type="button"
-                                        class="size-option px-6 py-3 border-2 border-gray-300 rounded-md font-cg font-semibold hover:border-gray-900 hover:bg-gray-900 hover:text-white transition-all"
+                                        class="size-option px-4 py-2.5 border-2 border-gray-300 rounded-sm font-cg font-semibold text-sm hover:border-[#1D433F] hover:bg-[#1D433F] hover:text-white transition-all"
                                         data-size="{{ $size }}"
                                         onclick="selectSize(this, '{{ $size }}')">
                                     {{ $size }}
@@ -174,15 +166,15 @@
 
                     <!-- Quantity Selector -->
                     <div>
-                        <label class="block font-cg text-sm font-bold uppercase tracking-wider text-gray-900 mb-3">
+                        <label class="block font-cg text-xs font-bold uppercase tracking-widest text-gray-900 mb-4">
                             Quantity
                         </label>
                         <div class="flex items-center gap-4">
-                            <div class="flex items-center border-2 border-gray-300 rounded-md overflow-hidden">
+                            <div class="flex items-center border-2 border-gray-300 rounded-sm overflow-hidden">
                                 <button type="button" onclick="decrementQuantity()" 
                                         class="px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+                                    <svg class="w-4 h-4 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M20 12H4"/>
                                     </svg>
                                 </button>
                                 <input type="number" 
@@ -194,22 +186,22 @@
                                        class="w-20 text-center border-0 font-lora font-semibold text-gray-900 focus:ring-0">
                                 <button type="button" onclick="incrementQuantity()" 
                                         class="px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                    <svg class="w-4 h-4 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
                                     </svg>
                                 </button>
                             </div>
-                            <p id="quantityWarning" class="text-sm text-yellow-600 font-cg hidden"></p>
+                            <p id="quantityWarning" class="text-sm text-yellow-600 font-cg font-medium hidden"></p>
                         </div>
                     </div>
 
                     <!-- Action Buttons -->
-                    <div class="space-y-3">
+                    <div class="space-y-3 pt-4">
                         @auth
                             <button type="submit" 
                                     id="addToCartBtn"
                                     @if(!$product->has_variants && $product->stock <= 0) disabled @endif
-                                    class="w-full px-8 py-4 font-cg text-base font-semibold text-white bg-gray-900 rounded-md hover:bg-gray-800 transition-all duration-300 flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                                    class="w-full px-8 py-4 font-cg text-base font-semibold text-white bg-gray-900 rounded-sm hover:bg-[#1D433F] transition-all duration-300 flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                                 </svg>
@@ -225,64 +217,157 @@
                             </button>
                         @else
                         <a href="{{ route('login') }}" 
-                           class="block w-full px-8 py-4 font-cg text-base font-semibold text-center text-white bg-gray-900 rounded-md hover:bg-gray-800 transition-all duration-300">
+                           class="block w-full px-8 py-4 font-cg text-base font-semibold text-center text-white bg-gray-900 rounded-sm hover:bg-[#1D433F] transition-all duration-300">
                             Login to Purchase
                         </a>
                         @endauth
 
                         <a href="{{ route('products.index') }}" 
-                           class="block w-full px-8 py-4 font-cg text-base font-semibold text-center text-gray-900 bg-white border-2 border-gray-900 rounded-md hover:bg-gray-50 transition-all duration-300">
+                           class="block w-full px-8 py-4 font-cg text-base font-semibold text-center text-gray-900 bg-white border-2 border-gray-900 rounded-sm hover:bg-gray-50 transition-all duration-300">
                             Continue Shopping
                         </a>
                     </div>
                 </form>
 
-                <!-- Product Collections -->
-                @if($product->collections->isNotEmpty())
-                <div class="mt-8 pt-8 border-t border-gray-200">
-                    <h3 class="font-cg text-sm font-bold uppercase tracking-wider text-gray-900 mb-3">
-                        Part of Collections
-                    </h3>
-                    <div class="flex flex-wrap gap-2">
-                        @foreach($product->collections as $collection)
-                        <a href="{{ route('collections.show', $collection->slug) }}"
-                           class="px-4 py-2 bg-gray-100 text-gray-700 font-cg text-sm rounded-md hover:bg-gray-900 hover:text-white transition-all">
-                            {{ $collection->name }}
-                        </a>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
+                <!-- Additional Information Accordions -->
+                <div class="mt-12 pt-12 border-t-2 border-gray-200 space-y-4">
+                    <!-- Size Guide -->
+                    <details class="group">
+                        <summary class="flex items-center justify-between cursor-pointer py-4 px-0 font-cg text-sm font-bold uppercase tracking-widest text-gray-900 hover:text-[#1D433F] transition-colors">
+                            <span>Size Guide</span>
+                            <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                            </svg>
+                        </summary>
+                        <div class="pb-4 font-lora text-sm text-gray-600 space-y-4">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-xs">
+                                    <thead>
+                                        <tr class="border-b border-gray-300">
+                                            <th class="text-left py-2 px-2 font-semibold">Measurement</th>
+                                            <th class="text-center py-2 px-2">XS</th>
+                                            <th class="text-center py-2 px-2">S</th>
+                                            <th class="text-center py-2 px-2">M</th>
+                                            <th class="text-center py-2 px-2">L</th>
+                                            <th class="text-center py-2 px-2">XL</th>
+                                            <th class="text-center py-2 px-2">XXL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-gray-200">
+                                            <td class="py-2 px-2 font-medium">Length</td>
+                                            <td class="text-center py-2 px-2">25.00"</td>
+                                            <td class="text-center py-2 px-2">26.00"</td>
+                                            <td class="text-center py-2 px-2">27.00"</td>
+                                            <td class="text-center py-2 px-2">28.00"</td>
+                                            <td class="text-center py-2 px-2">29.00"</td>
+                                            <td class="text-center py-2 px-2">30.00"</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-200">
+                                            <td class="py-2 px-2 font-medium">Chest</td>
+                                            <td class="text-center py-2 px-2">21.25"</td>
+                                            <td class="text-center py-2 px-2">22.50"</td>
+                                            <td class="text-center py-2 px-2">23.75"</td>
+                                            <td class="text-center py-2 px-2">25.00"</td>
+                                            <td class="text-center py-2 px-2">26.25"</td>
+                                            <td class="text-center py-2 px-2">27.50"</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-200">
+                                            <td class="py-2 px-2 font-medium">Shoulder</td>
+                                            <td class="text-center py-2 px-2">17.00"</td>
+                                            <td class="text-center py-2 px-2">18.00"</td>
+                                            <td class="text-center py-2 px-2">19.00"</td>
+                                            <td class="text-center py-2 px-2">20.00"</td>
+                                            <td class="text-center py-2 px-2">21.00"</td>
+                                            <td class="text-center py-2 px-2">22.00"</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2 px-2 font-medium">Sleeve</td>
+                                            <td class="text-center py-2 px-2">25.25"</td>
+                                            <td class="text-center py-2 px-2">25.50"</td>
+                                            <td class="text-center py-2 px-2">26.00"</td>
+                                            <td class="text-center py-2 px-2">26.75"</td>
+                                            <td class="text-center py-2 px-2">26.75"</td>
+                                            <td class="text-center py-2 px-2">27.00"</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </details>
 
-                <!-- Product Details -->
-                <div class="mt-8 pt-8 border-t border-gray-200 space-y-4">
-                    <div class="flex items-start gap-3">
-                        <svg class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
-                        </svg>
-                        <div>
-                            <p class="text-sm font-semibold text-gray-900 font-cg">Premium Materials</p>
-                            <p class="text-sm text-gray-600 font-lora">High-quality fabrics designed to last</p>
+                    <!-- Shipping Information -->
+                    <details class="group border-t border-gray-200">
+                        <summary class="flex items-center justify-between cursor-pointer py-4 px-0 font-cg text-sm font-bold uppercase tracking-widest text-gray-900 hover:text-[#1D433F] transition-colors">
+                            <span>Shipping Information</span>
+                            <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                            </svg>
+                        </summary>
+                        <div class="pb-4 font-lora text-sm text-gray-600 space-y-3">
+                            <p>Orders typically take 1-3 business days to be processed and shipped out.</p>
+                            <p>All orders will be sent with a tracking number once dispatched from the warehouse.</p>
+                            <p class="text-xs text-gray-500">Orders to PO boxes will not be accepted.</p>
                         </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <svg class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                        </svg>
-                        <div>
-                            <p class="text-sm font-semibold text-gray-900 font-cg">Secure Checkout</p>
-                            <p class="text-sm text-gray-600 font-lora">Safe and encrypted payment processing</p>
+                    </details>
+
+                    <!-- Fabric Information -->
+                    <details class="group border-t border-gray-200">
+                        <summary class="flex items-center justify-between cursor-pointer py-4 px-0 font-cg text-sm font-bold uppercase tracking-widest text-gray-900 hover:text-[#1D433F] transition-colors">
+                            <span>Fabric Information</span>
+                            <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                            </svg>
+                        </summary>
+                        <div class="pb-4 font-lora text-sm text-gray-600">
+                            <ul class="space-y-2 list-disc list-inside">
+                                <li>400 GSM Heavyweight Crossgrain Cut Fleece</li>
+                                <li>400 GSM Heavyweight 1x1 Rib</li>
+                                <li>100% Carded Cotton Canadian Milled Fabric</li>
+                                <li>2 Needle Coverstitch Construction</li>
+                                <li>Flatlock stitching underarm and side panel</li>
+                            </ul>
                         </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <svg class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                        </svg>
-                        <div>
-                            <p class="text-sm font-semibold text-gray-900 font-cg">Fast Shipping</p>
-                            <p class="text-sm text-gray-600 font-lora">Quick delivery to your doorstep</p>
+                    </details>
+
+                    <!-- Return Policy -->
+                    <details class="group border-t border-gray-200">
+                        <summary class="flex items-center justify-between cursor-pointer py-4 px-0 font-cg text-sm font-bold uppercase tracking-widest text-gray-900 hover:text-[#1D433F] transition-colors">
+                            <span>Return Policy</span>
+                            <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                            </svg>
+                        </summary>
+                        <div class="pb-4 font-lora text-sm text-gray-600 space-y-3">
+                            <p>Items returned within 14 days of delivery in as new unused condition will be eligible for a refund.</p>
+                            <p class="text-xs">Shipping and handling is not refundable. All sale items are final purchase.</p>
+                            <p>You are responsible for return shipping costs.</p>
                         </div>
-                    </div>
+                    </details>
+
+                    <!-- FAQ -->
+                    <details class="group border-t border-gray-200">
+                        <summary class="flex items-center justify-between cursor-pointer py-4 px-0 font-cg text-sm font-bold uppercase tracking-widest text-gray-900 hover:text-[#1D433F] transition-colors">
+                            <span>FAQ</span>
+                            <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                            </svg>
+                        </summary>
+                        <div class="pb-4 font-lora text-sm text-gray-600 space-y-4">
+                            <div>
+                                <p class="font-semibold text-gray-900 mb-2">How long does shipping take?</p>
+                                <p>Orders typically take 1-3 business days to process and ship. Extra time may be needed during busy seasons.</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900 mb-2">Can I return items?</p>
+                                <p>Yes, items can be returned within 14 days in unused condition. Return shipping costs are your responsibility.</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900 mb-2">How do I know my size?</p>
+                                <p>Check the size guide above for accurate measurements. We recommend measuring a garment you already own.</p>
+                            </div>
+                        </div>
+                    </details>
                 </div>
             </div>
         </div>
@@ -290,7 +375,7 @@
 
     <!-- Related Products Section -->
     @if($relatedProducts->count() > 0)
-    <div class="bg-neutral-50 py-20 border-t border-gray-200">
+    <div class="bg-gray-50 py-20 border-t border-gray-200">
         <div class="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl">
             <h2 class="font-cg text-3xl md:text-4xl font-bold tracking-tight uppercase text-gray-900 mb-10">
                 You Might Also Like
@@ -299,7 +384,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($relatedProducts as $related)
                 <a href="{{ route('products.show', $related->id) }}" 
-                   class="bg-white rounded-sm border border-gray-200 overflow-hidden group cursor-pointer hover:shadow-xl hover:border-gray-300 transition-all duration-300">
+                   class="bg-white rounded-sm border border-gray-200 overflow-hidden group cursor-pointer hover:shadow-lg hover:border-gray-300 transition-all duration-300">
                     <div class="aspect-square bg-gray-100 overflow-hidden">
                         @if($related->images->count() > 0)
                         <img src="{{ asset('storage/' . $related->images->first()->image_url) }}" 
@@ -307,7 +392,7 @@
                              alt="{{ $related->name }}" 
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         @else
-                        <div class="w-full h-full flex items-center justify-center">
+                        <div class="w-full h-full flex items-center justify-center bg-gray-100">
                             <svg class="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
@@ -320,17 +405,21 @@
                             {{ $related->category->name }}
                         </p>
                         @endif
-                        <h3 class="font-lora text-base text-gray-900 mb-2 group-hover:text-gray-600 transition-colors line-clamp-2">
+                        <h3 class="font-lora text-base text-gray-900 mb-2 group-hover:text-[#1D433F] transition-colors line-clamp-2 font-medium">
                             {{ $related->name }}
                         </h3>
                         <div class="flex items-center justify-between">
                             <p class="font-lora text-lg font-semibold text-gray-900">
                                 ${{ number_format($related->price, 2) }}
                             </p>
-                            @if($related->stock <= 0)
-                            <span class="text-xs text-red-600 font-cg">Out of stock</span>
-                            @elseif($related->stock <= 10)
-                            <span class="text-xs text-yellow-600 font-cg">Low stock</span>
+                            @if($related->has_variants)
+                                <span class="text-xs text-[#1FAC99] font-cg font-semibold">In stock</span>
+                            @else
+                                @if($related->stock <= 0)
+                                <span class="text-xs text-red-600 font-cg font-semibold">Out of stock</span>
+                                @elseif($related->stock <= 10)
+                                <span class="text-xs text-yellow-600 font-cg font-semibold">Low stock</span>
+                                @endif
                             @endif
                         </div>
                     </div>
@@ -344,14 +433,13 @@
 
 @push('scripts')
 <script>
-// Product variants data from backend
+// All the variant selection code from your existing file
 const variants = @json($product->variants ?? []);
 const hasVariants = {{ $product->has_variants ? 'true' : 'false' }};
 let selectedColor = null;
 let selectedSize = null;
 let maxStock = {{ $product->stock }};
 
-// Change main image
 function changeImage(imageUrl) {
     const mainImage = document.getElementById('mainImage');
     mainImage.style.opacity = '0';
@@ -361,43 +449,34 @@ function changeImage(imageUrl) {
     }, 200);
 }
 
-// Select color
 function selectColor(element, color) {
     selectedColor = color;
-    
-    // Update UI
     document.querySelectorAll('.color-option').forEach(btn => {
-        btn.classList.remove('ring-4', 'ring-gray-900', 'border-gray-900');
+        btn.classList.remove('ring-4', 'ring-[#1D433F]', 'border-[#1D433F]');
         btn.classList.add('border-gray-300');
     });
     element.classList.remove('border-gray-300');
-    element.classList.add('ring-4', 'ring-gray-900', 'border-gray-900');
+    element.classList.add('ring-4', 'ring-[#1D433F]', 'border-[#1D433F]');
     document.getElementById('selectedColorName').textContent = color;
     document.getElementById('selectedColorName').classList.remove('text-gray-500');
     document.getElementById('selectedColorName').classList.add('text-gray-900');
-    
     updateVariantSelection();
 }
 
-// Select size
 function selectSize(element, size) {
     selectedSize = size;
-    
-    // Update UI
     document.querySelectorAll('.size-option').forEach(btn => {
-        btn.classList.remove('bg-gray-900', 'text-white', 'border-gray-900');
+        btn.classList.remove('bg-[#1D433F]', 'text-white', 'border-[#1D433F]');
         btn.classList.add('border-gray-300');
     });
     element.classList.remove('border-gray-300');
-    element.classList.add('bg-gray-900', 'text-white', 'border-gray-900');
+    element.classList.add('bg-[#1D433F]', 'text-white', 'border-[#1D433F]');
     document.getElementById('selectedSizeName').textContent = size;
     document.getElementById('selectedSizeName').classList.remove('text-gray-500');
     document.getElementById('selectedSizeName').classList.add('text-gray-900');
-    
     updateVariantSelection();
 }
 
-// Update variant selection
 function updateVariantSelection() {
     if (!hasVariants) return;
     
@@ -413,48 +492,32 @@ function updateVariantSelection() {
     
     if (variant) {
         document.getElementById('selectedVariantId').value = variant.id;
-        
-        // Update price
         priceDisplay.textContent = '$' + parseFloat(variant.final_price).toFixed(2);
-        
-        // Update stock
         maxStock = variant.stock;
         document.getElementById('quantity').max = variant.stock;
         
         if (variant.stock > 0) {
-            stockStatus.innerHTML = `<span class="text-green-600">✓ In Stock (${variant.stock} available)</span>`;
+            stockStatus.innerHTML = `<span class="text-[#1FAC99]">✓ In Stock (${variant.stock} available)</span>`;
             stockBadge.innerHTML = variant.stock <= 10 
-                ? `<div class="bg-yellow-500 text-white text-xs font-cg px-4 py-2 rounded-full">Only ${variant.stock} Left</div>`
+                ? `<div class="bg-yellow-500 text-white text-xs font-semibold font-cg px-3 py-1.5 rounded-full">Only ${variant.stock} Left</div>`
                 : '';
             addToCartBtn.disabled = false;
             addToCartText.textContent = 'Add to Cart';
         } else {
-            stockStatus.innerHTML = '<span class="text-red-600">✗ Out of Stock</span>';
-            stockBadge.innerHTML = '<div class="bg-red-600 text-white text-xs font-cg px-4 py-2 rounded-full">Out of Stock</div>';
+            stockStatus.innerHTML = '<span class="text-red-600">Out of Stock</span>';
+            stockBadge.innerHTML = '<div class="bg-red-600 text-white text-xs font-semibold font-cg px-3 py-1.5 rounded-full">Out of Stock</div>';
             addToCartBtn.disabled = true;
             addToCartText.textContent = 'Out of Stock';
         }
         
-        // Change main image if variant has one
         if (variant.image_url) {
             changeImage(variant.image_url);
         }
         
-        // Update quantity warning
         updateQuantityWarning();
-    } else if (selectedColor || selectedSize) {
-        stockStatus.innerHTML = '<span class="text-gray-500">Please select both color and size</span>';
-        stockBadge.innerHTML = '';
-        addToCartBtn.disabled = true;
-        addToCartText.textContent = 'Select Options';
-        
-        // Reset price to base
-        const basePrice = parseFloat(priceDisplay.getAttribute('data-base-price'));
-        priceDisplay.textContent = '$' + basePrice.toFixed(2);
     }
 }
 
-// Quantity Controls
 function incrementQuantity() {
     const input = document.getElementById('quantity');
     const max = parseInt(input.max);
@@ -479,10 +542,7 @@ function updateQuantityWarning() {
     const quantity = parseInt(document.getElementById('quantity').value);
     const warning = document.getElementById('quantityWarning');
     
-    if (hasVariants && maxStock > 0 && maxStock <= 10 && quantity >= maxStock * 0.5) {
-        warning.textContent = `Only ${maxStock} available`;
-        warning.classList.remove('hidden');
-    } else if (!hasVariants && maxStock > 0 && maxStock <= 10 && quantity >= maxStock * 0.5) {
+    if (maxStock > 0 && maxStock <= 10 && quantity >= maxStock * 0.5) {
         warning.textContent = `Only ${maxStock} available`;
         warning.classList.remove('hidden');
     } else {
@@ -490,24 +550,11 @@ function updateQuantityWarning() {
     }
 }
 
-// Form validation
 document.getElementById('addToCartForm')?.addEventListener('submit', function(e) {
     if (hasVariants && (!selectedColor || !selectedSize)) {
         e.preventDefault();
         alert('Please select both color and size');
         return false;
-    }
-    
-    const button = this.querySelector('button[type="submit"]');
-    if (button && !button.disabled) {
-        button.innerHTML = `
-            <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <span>Adding to Cart...</span>
-        `;
-        button.disabled = true;
     }
 });
 </script>
@@ -515,22 +562,6 @@ document.getElementById('addToCartForm')?.addEventListener('submit', function(e)
 <style>
 #mainImage {
     transition: opacity 0.2s ease-in-out;
-}
-
-.color-option {
-    position: relative;
-}
-
-.color-option::after {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 9999px;
-    padding: 2px;
-    background: transparent;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
 }
 </style>
 @endpush

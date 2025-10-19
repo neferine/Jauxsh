@@ -148,7 +148,7 @@
                     <div>
                         <h3 class="font-cg font-semibold text-lg text-gray-900 mb-2">What is your return policy?</h3>
                         <p class="font-lora text-gray-700 text-base leading-relaxed">
-                            We accept returns within 30 days of delivery for unworn, unwashed items with original tags attached. 
+                            We accept returns within 14 days of delivery for unworn, unwashed items with original tags attached. 
                             Some sale items may have restrictions. Please see our full 
                             <a href="/shipping-returns" class="text-[#1fac99ff] hover:underline">Shipping & Returns policy</a> 
                             for complete details.

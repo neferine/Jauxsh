@@ -19,8 +19,18 @@
         </a>
     </div>
 
-    <!-- Products Table -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+    <!-- Tab Navigation -->
+    <div class="flex gap-4 border-b border-gray-200">
+        <button onclick="switchTab('products')" id="tab-products" class="px-6 py-3 font-cg text-sm font-medium text-gray-900 border-b-2 border-[#1FAC99]">
+            Products
+        </button>
+        <button onclick="switchTab('variants')" id="tab-variants" class="px-6 py-3 font-cg text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-900 hover:border-gray-300">
+            Manage Variants
+        </button>
+    </div>
+
+    <!-- Products Tab -->
+    <div id="products-tab" class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
         @if($products->count())
         <div class="overflow-x-auto">
             <table class="w-full">
@@ -30,6 +40,7 @@
                         <th class="px-6 py-4">Category</th>
                         <th class="px-6 py-4">Price</th>
                         <th class="px-6 py-4">Stock</th>
+                        <th class="px-6 py-4">Variants</th>
                         <th class="px-6 py-4">Created</th>
                         <th class="px-6 py-4 text-right">Actions</th>
                     </tr>
@@ -65,13 +76,16 @@
                             ${{ number_format($product->price, 2) }}
                         </td>
                         <td class="px-6 py-4">
-                            @if($product->stock > 10)
+                            @php
+                                $totalStock = $product->variants->sum('stock');
+                            @endphp
+                            @if($totalStock > 10)
                             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 font-cg">
-                                {{ $product->stock }} in stock
+                                {{ $totalStock }} in stock
                             </span>
-                            @elseif($product->stock > 0)
+                            @elseif($totalStock > 0)
                             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 font-cg">
-                                {{ $product->stock }} low stock
+                                {{ $totalStock }} low stock
                             </span>
                             @else
                             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 font-cg">
@@ -79,11 +93,20 @@
                             </span>
                             @endif
                         </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 font-cg">
+                                {{ $product->variants->count() }} variants
+                            </span>
+                        </td>
                         <td class="px-6 py-4 text-sm text-gray-500 font-cg">
                             {{ $product->created_at->format('M d, Y') }}
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end space-x-3">
+                                <a href="/admin/products/{{ $product->id }}/variants" 
+                                   class="text-blue-600 hover:text-blue-800 font-cg text-sm hover:underline">
+                                    Variants
+                                </a>
                                 <a href="/admin/products/{{ $product->id }}/edit" 
                                    class="text-[#1FAC99] hover:text-[#1D433F] font-cg text-sm hover:underline">
                                     Edit
@@ -127,5 +150,117 @@
         </div>
         @endif
     </div>
+
+    <!-- Variants Tab -->
+    <div id="variants-tab" class="hidden bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+        @if($products->count())
+        <div class="p-6">
+            <div class="space-y-8">
+                @foreach($products as $product)
+                    @if($product->variants->count() > 0)
+                    <div class="border-b border-gray-200 pb-8 last:border-b-0">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 font-cg">{{ $product->name }}</h3>
+                                <p class="text-sm text-gray-500 font-cg">{{ $product->variants->count() }} variant(s)</p>
+                            </div>
+                            <a href="/admin/products/{{ $product->id }}/variants" 
+                               class="px-4 py-2 bg-blue-600 text-white text-sm font-cg rounded-lg hover:bg-blue-700 transition-colors">
+                                Manage All
+                            </a>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="border-b border-gray-200">
+                                        <th class="text-left px-4 py-2 font-cg font-semibold text-gray-700">SKU</th>
+                                        <th class="text-left px-4 py-2 font-cg font-semibold text-gray-700">Size</th>
+                                        <th class="text-left px-4 py-2 font-cg font-semibold text-gray-700">Color</th>
+                                        <th class="text-left px-4 py-2 font-cg font-semibold text-gray-700">Stock</th>
+                                        <th class="text-left px-4 py-2 font-cg font-semibold text-gray-700">Price Adj.</th>
+                                        <th class="text-left px-4 py-2 font-cg font-semibold text-gray-700">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    @foreach($product->variants as $variant)
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-4 py-3 font-cg text-gray-900">{{ $variant->sku }}</td>
+                                        <td class="px-4 py-3 font-cg text-gray-700">{{ $variant->size ?? '-' }}</td>
+                                        <td class="px-4 py-3 font-cg">
+                                            <div class="flex items-center gap-2">
+                                                @if($variant->color_hex)
+                                                <div class="w-4 h-4 rounded border border-gray-300" style="background-color: {{ $variant->color_hex }};"></div>
+                                                @endif
+                                                <span class="text-gray-700">{{ $variant->color ?? '-' }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 font-cg">
+                                            @if($variant->stock > 10)
+                                            <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800">{{ $variant->stock }}</span>
+                                            @elseif($variant->stock > 0)
+                                            <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800">{{ $variant->stock }}</span>
+                                            @else
+                                            <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-800">{{ $variant->stock }}</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3 font-cg text-gray-900">
+                                            @if($variant->price_adjustment > 0)
+                                            <span class="text-green-600">+${{ number_format($variant->price_adjustment, 2) }}</span>
+                                            @elseif($variant->price_adjustment < 0)
+                                            <span class="text-red-600">-${{ number_format(abs($variant->price_adjustment), 2) }}</span>
+                                            @else
+                                            <span class="text-gray-500">No adjustment</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <a href="/admin/products/{{ $product->id }}/variants/{{ $variant->id }}/edit" 
+                                               class="text-[#1FAC99] hover:text-[#1D433F] font-cg text-xs hover:underline">
+                                                Edit
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+        @else
+        <div class="px-6 py-12 text-center">
+            <p class="text-gray-500 font-cg">No products with variants yet.</p>
+        </div>
+        @endif
+    </div>
 </div>
+
+@push('scripts')
+<script>
+function switchTab(tab) {
+    // Hide all tabs
+    document.getElementById('products-tab').classList.add('hidden');
+    document.getElementById('variants-tab').classList.add('hidden');
+    
+    // Remove active state from all buttons
+    document.getElementById('tab-products').classList.remove('border-[#1FAC99]', 'text-gray-900');
+    document.getElementById('tab-products').classList.add('border-transparent', 'text-gray-500');
+    document.getElementById('tab-variants').classList.remove('border-[#1FAC99]', 'text-gray-900');
+    document.getElementById('tab-variants').classList.add('border-transparent', 'text-gray-500');
+    
+    // Show selected tab
+    if (tab === 'products') {
+        document.getElementById('products-tab').classList.remove('hidden');
+        document.getElementById('tab-products').classList.remove('border-transparent', 'text-gray-500');
+        document.getElementById('tab-products').classList.add('border-[#1FAC99]', 'text-gray-900');
+    } else {
+        document.getElementById('variants-tab').classList.remove('hidden');
+        document.getElementById('tab-variants').classList.remove('border-transparent', 'text-gray-500');
+        document.getElementById('tab-variants').classList.add('border-[#1FAC99]', 'text-gray-900');
+    }
+}
+</script>
+@endpush
 @endsection

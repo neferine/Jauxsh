@@ -1,0 +1,22 @@
+### E-coms
+* Change the template for my liking
+* Make Everything working
+
+* Done -  In Admin Dashboard | Orders, when the order is marked as cancelled the stock of the item will go back, also after a delay of time the cancelled order will be removed or not idk 
+* Done: Make the acoount in the navbar, when clicked go to profile of the user, can edit some details such as adding address line,
+*  Done: Make sure user can put order and it will show on the cart 
+* Done: Still need to improve the ui for the sliding cart and the shop 
+* Done: Do the Pages on the footer, Information, Social will redirect to a sample social media page etc... And for news letter its just a fillable form 
+* DOne : make a Terms of service and privacy policy 
+
+* In Progress : Product Size for each items, and colors if available.
+* Different page for bundles?? yes
+* Make the bundles on the frontpage
+* Have a Seller Registration  and a different dashboard for seller
+* Fix Shipping fee etc...
+* Have a super admin
+* Fix Showing the products UI and the bundles too...
+
+Done Fix sorting And Searching
+
+Lastly add sample products atleast 20 - 30 

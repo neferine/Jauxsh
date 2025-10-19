@@ -15,8 +15,7 @@ class ProductController extends Controller
         // Filter by category
         if ($request->has('category')) {
             $query->whereHas('category', function($q) use ($request) {
-                $q->where('slug', $request->category)
-                  ->orWhere('id', $request->category);
+                $q->where('id', $request->category);
             });
         }
 
@@ -67,20 +66,31 @@ class ProductController extends Controller
             'images', 
             'category', 
             'variants' => function($query) {
-                $query->where('stock', '>', 0); // Only show in-stock variants
+                $query->where('stock', '>', 0);
             },
             'collections'
         ])->findOrFail($id);
+
+        // Compute final_price and ensure correct image paths
+        $product->variants->transform(function ($variant) use ($product) {
+            $variant->final_price = $product->price + ($variant->price_adjustment ?? 0);
+
+            if ($variant->image_url && !str_starts_with($variant->image_url, 'http')) {
+                $variant->image_url = asset('storage/' . $variant->image_url);
+            }
+
+            return $variant;
+        });
 
         // Get available colors and sizes
         $availableColors = $product->available_colors;
         $availableSizes = $product->available_sizes;
 
-        // Get related products (same category, excluding current product)
+        // Related products
         $relatedProducts = Product::with(['images', 'category'])
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
-            ->where('stock', '>', 0) // Only show in-stock products
+            ->where('stock', '>', 0)
             ->inRandomOrder()
             ->limit(4)
             ->get();
@@ -92,4 +102,5 @@ class ProductController extends Controller
             'relatedProducts'
         ));
     }
+
 }

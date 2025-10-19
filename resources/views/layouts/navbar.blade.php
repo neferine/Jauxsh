@@ -4,9 +4,9 @@
       <!-- Left Nav -->
       <ul class="flex space-x-10">
         <li class="nav-item">
-            <a href="#" onclick="event.preventDefault(); openShopSlider();" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase">
+            <button onclick="openShopSlider();" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase cursor-pointer bg-transparent border-0 p-0">
                 Shop
-            </a>
+            </button>
         </li>
         <li class="nav-item">
           <a href="{{ route('about') }}" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase">
@@ -24,47 +24,10 @@
 
       <!-- Right Nav -->
       <ul class="flex space-x-10">
-        <!-- Temporary Removed  
-         Currency Dropdown 
-           Dropdown Menu 
-        <li class="nav-item relative">
-          <a>
-            <button id="currencyBtn"
-              class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition flex items-center gap-1 uppercase">
-              <span id="currentCurrency">USD $</span>
-            </button>
-          </a>
-        
-          <div id="currencyDropdown"
-            class="hidden absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded shadow-lg min-w-[120px] z-50">
-            <button onclick="changeCurrency('USD', '$')"
-              class="currency-option w-full text-left px-4 py-2 font-lora text-sm text-gray-700 hover:bg-gray-100 transition flex items-center justify-between">
-              <span>USD</span><span class="text-gray-500">$</span>
-            </button>
-            <button onclick="changeCurrency('PHP', '₱')"
-              class="currency-option w-full text-left px-4 py-2 font-lora text-sm text-gray-700 hover:bg-gray-100 transition flex items-center justify-between">
-              <span>PHP</span><span class="text-gray-500">₱</span>
-            </button>
-            <button onclick="changeCurrency('CAD', 'C$')"
-              class="currency-option w-full text-left px-4 py-2 font-lora text-sm text-gray-700 hover:bg-gray-100 transition flex items-center justify-between">
-              <span>CAD</span><span class="text-gray-500">C$</span>
-            </button>
-            <button onclick="changeCurrency('EUR', '€')"
-              class="currency-option w-full text-left px-4 py-2 font-lora text-sm text-gray-700 hover:bg-gray-100 transition flex items-center justify-between">
-              <span>EUR</span><span class="text-gray-500">€</span>
-            </button>
-            <button onclick="changeCurrency('GBP', '£')"
-              class="currency-option w-full text-left px-4 py-2 font-lora text-sm text-gray-700 hover:bg-gray-100 transition flex items-center justify-between">
-              <span>GBP</span><span class="text-gray-500">£</span>
-            </button>
-          </div>
-        </li>
-
-        -->
-        
         <li class="nav-item">
-          <a href="#" id="searchNavBtn"
-            class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase">Search</a>
+          <button   id="searchNavBtn"  onclick="openSearchBar()" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase cursor-pointer bg-transparent border-0 p-0">
+            Search
+          </button>
         </li>
 
         {{-- Account / Profile Dropdown --}}
@@ -96,10 +59,10 @@
 
         @auth
         <li class="nav-item">
-          <a href="#" onclick="event.preventDefault(); openCartSlider();" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase relative">
+          <button onclick="openCartSlider();" class="font-lora text-sm tracking-wide text-black hover:opacity-70 transition uppercase relative cursor-pointer bg-transparent border-0 p-0">
               Cart
               <span id="cartCount" class="absolute -top-2 -right-3 bg-[#1fac99ff] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden">0</span>
-          </a>
+          </button>
         </li>
         @endauth
       </ul>
@@ -131,10 +94,6 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Currency controls
-  const currencyBtn = document.getElementById('currencyBtn');
-  const currencyDropdown = document.getElementById('currencyDropdown');
-
   // Search controls
   const searchNavBtn = document.getElementById('searchNavBtn');
   const searchBar = document.getElementById('searchBar');
@@ -143,9 +102,23 @@ document.addEventListener('DOMContentLoaded', function() {
   // Update cart count on page load
   @auth
   function updateCartCount() {
-    fetch('/api/cart')
-      .then(response => response.json())
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    
+    fetch('/api/cart', {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'X-CSRF-TOKEN': csrfToken || '',
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+      .then(response => {
+        if (response.status === 401) return null;
+        return response.json();
+      })
       .then(data => {
+        if (!data) return;
         const cartCount = document.getElementById('cartCount');
         if (cartCount && data.items && data.items.length > 0) {
           cartCount.textContent = data.items.length;
@@ -158,21 +131,10 @@ document.addEventListener('DOMContentLoaded', function() {
   updateCartCount();
   @endauth
 
-  // Currency Dropdown
-  currencyBtn?.addEventListener('click', function(e) {
-    e.stopPropagation();
-    currencyDropdown.classList.toggle('hidden');
-  });
-
-  document.addEventListener('click', function(e) {
-    if (!currencyBtn?.contains(e.target)) {
-      currencyDropdown?.classList.add('hidden');
-    }
-  });
-
-  // Search Bar
+  // Search Bar - Only opens when Search button is clicked
   searchNavBtn?.addEventListener('click', function(e) {
     e.preventDefault();
+    e.stopPropagation();
     searchBar.classList.remove('-translate-y-full');
     searchBar.classList.add('translate-y-0');
     document.getElementById('searchInput')?.focus();
@@ -182,13 +144,23 @@ document.addEventListener('DOMContentLoaded', function() {
     searchBar.classList.add('-translate-y-full');
     searchBar.classList.remove('translate-y-0');
   });
-});
 
-// Currency change function
-window.changeCurrency = function(currency, symbol) {
-  document.getElementById('currentCurrency').textContent = `${currency} ${symbol}`;
-  document.getElementById('currencyDropdown').classList.add('hidden');
-};
+  // Close search bar when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!searchBar.contains(e.target) && !searchNavBtn.contains(e.target)) {
+      searchBar.classList.add('-translate-y-full');
+      searchBar.classList.remove('translate-y-0');
+    }
+  });
+
+  // Close search bar on escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      searchBar.classList.add('-translate-y-full');
+      searchBar.classList.remove('translate-y-0');
+    }
+  });
+});
 </script>
 @endpush
 
@@ -205,7 +177,8 @@ window.changeCurrency = function(currency, symbol) {
     letter-spacing: 0.05em;
   }
 
-  .nav-item a::after {
+  .nav-item a::after,
+  .nav-item button::after {
     content: '';
     position: absolute;
     bottom: -4px;
@@ -216,7 +189,8 @@ window.changeCurrency = function(currency, symbol) {
     transition: width 0.3s ease;
   }
 
-  .nav-item a:hover::after {
+  .nav-item a:hover::after,
+  .nav-item button:hover::after {
     width: 100%;
   }
 

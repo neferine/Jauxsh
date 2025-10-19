@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
+use App\Models\Collection;
 
 // Categories endpoint
 Route::get('/categories', function () {
@@ -17,17 +18,8 @@ Route::get('/categories', function () {
 // Cart endpoint (requires auth)
 Route::middleware('auth:web')->get('/cart', function (Request $request) {
     try {
-        // Check if user is actually authenticated
-        if (!Auth::check()) {
-            return response()->json([
-                'items' => [],
-                'total' => 0,
-                'authenticated' => false
-            ], 401);
-        }
-
         $cart = Cart::with(['cartItems.product.images'])
-            ->where('user_id', Auth::id())
+            ->where('user_id', auth()->id())
             ->first();
        
         if (!$cart || $cart->cartItems->isEmpty()) {
@@ -74,6 +66,54 @@ Route::middleware('auth:web')->get('/cart', function (Request $request) {
     }
 });
 
+// Update cart item quantity (NEW - requires auth)
+Route::middleware('auth:web')->patch('/cart/{cartItem}', function(Request $request, CartItem $cartItem) {
+    try {
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        // Ensure user owns this cart item
+        if ($cartItem->cart->user_id !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+
+        // Validate quantity
+        $request->validate([
+            'quantity' => 'required|integer|min:1|max:99'
+        ]);
+
+        // Check stock availability
+        if ($request->quantity > $cartItem->product->stock) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Not enough stock available'
+            ], 400);
+        }
+
+        // Update quantity
+        $cartItem->quantity = $request->quantity;
+        $cartItem->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Quantity updated successfully'
+        ]);
+    } catch (\Exception $e) {
+        \Log::error('Update cart item error: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage()
+        ], 500);
+    }
+});
+
 // Remove item from cart (requires auth)
 Route::middleware('auth:web')->delete('/cart/{cartItem}', function(CartItem $cartItem) {
     try {
@@ -112,10 +152,10 @@ Route::post('/set-currency', function (Request $request) {
 
 // Search endpoint
 Route::get('/search', function (Request $request) {
-    $query = $request->query('query', '');
-   
+    $query = strtolower($request->query('query', ''));
+
     return Product::with('images')
-        ->where('name', 'like', "%{$query}%")
+        ->whereRaw('LOWER(name) LIKE ?', ["%{$query}%"])
         ->limit(8)
         ->get()
         ->map(function ($product) {
@@ -128,4 +168,52 @@ Route::get('/search', function (Request $request) {
                     : null,
             ];
         });
+});
+
+Route::get('/collections', function () {
+    return Collection::active()
+        ->ordered()
+        ->select('id', 'name', 'slug', 'description', 'image_url')
+        ->withCount('products')
+        ->get()
+        ->map(function ($collection) {
+            return [
+                'id' => $collection->id,
+                'name' => $collection->name,
+                'slug' => $collection->slug,
+                'description' => $collection->description,
+                'image_url' => $collection->image_url ? asset('storage/' . $collection->image_url) : null,
+                'product_count' => $collection->products_count,
+            ];
+        });
+});
+
+Route::get('/products', function (Request $request) {
+    $query = Product::with(['images', 'category']);
+    
+    // Filter by category
+    if ($request->has('category')) {
+        $query->where('category_id', $request->category);
+    }
+    
+    // Sorting
+    switch ($request->sort) {
+        case 'newest':
+            $query->orderBy('created_at', 'desc');
+            break;
+        case 'price_low':
+            $query->orderBy('price', 'asc');
+            break;
+        case 'price_high':
+            $query->orderBy('price', 'desc');
+            break;
+        case 'name':
+            $query->orderBy('name', 'asc');
+            break;
+        default:
+            // Remove sort_order reference - just use created_at
+            $query->orderBy('created_at', 'desc');
+    }
+    
+    return $query->paginate(12);
 });
