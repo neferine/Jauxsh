@@ -125,7 +125,7 @@ function loadCategories() {
                 `;
             } else {
                 list.innerHTML = categories.map(category => `
-                    <a href="/products?category=${category.id}" 
+                    <a href="/category/${category.slug}"
                        class="block group p-4 bg-white rounded-lg hover:bg-gray-50 transition-all duration-200 shadow-sm hover:shadow-md">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">

@@ -14,15 +14,21 @@ use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\Admin\AdminCollectionController;
 use App\Http\Controllers\Admin\AdminProductVariantController;
+use App\Http\Controllers\CategoryController;
+
 
 // Public routes (guest accessible)
 
 Route::get('/shop', [PageController::class, 'shop'])->name('shop.index');
+
+Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('categories.show');
+
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -111,7 +117,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::resource('products', AdminProductController::class);
     
     // Categories management
-    Route::resource('categories', CategoryController::class)->except(['show']);
+    Route::resource('categories', AdminCategoryController::class)->except(['show']);
     
     // Orders management
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');

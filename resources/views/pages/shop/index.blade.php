@@ -2,7 +2,7 @@
 @section('title', 'Shop - Jauxsh')
 
 @section('content')
-<div class="w-full min-h-screen bg-white">
+<div class="w-full min-h-screen ">
     <div class="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl pt-32 pb-20">
         
         {{-- Header --}}
@@ -16,12 +16,12 @@
         </div>
 
         {{-- Filter Bar --}}
-        <div class="sticky top-20 bg-white z-30 pb-6 mb-8 border-b border-gray-200">
+        <div class="sticky top-20  z-30 pb-6 mb-8 ">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 {{-- Category Filter --}}
                 <div class="flex items-center gap-3">
                     <button id="categoryFilterBtn" 
-                            class="flex items-center gap-2 px-5 py-2.5 bg-gray-50 hover:bg-gray-100 border-2 border-gray-200 rounded-full font-lora text-sm transition-all duration-200">
+                            class="flex items-center gap-2 px-5 py-2.5  hover:bg-gray-100 rounded-full font-lora text-sm transition-all duration-200">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                         </svg>
@@ -41,7 +41,7 @@
                         Loading...
                     </span>
                     <select id="sortSelect" 
-                            class="px-4 py-2.5 bg-gray-50 border-2 border-gray-200 rounded-full font-lora text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="px-4 py-2.5 border-2 border-gray-200 rounded-full font-lora text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                         <option value="featured">Featured</option>
                         <option value="newest">Newest</option>
                         <option value="price_low">Price: Low to High</option>

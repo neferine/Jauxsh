@@ -8,12 +8,13 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use App\Models\Collection;
 
-// Categories endpoint
 Route::get('/categories', function () {
     return Category::whereNull('parent_id')
-        ->select('id', 'name')
+        ->select('id', 'name', 'slug')
+        ->orderBy('name')
         ->get();
 });
+
 
 // Cart endpoint (requires auth)
 Route::middleware('auth:web')->get('/cart', function (Request $request) {
