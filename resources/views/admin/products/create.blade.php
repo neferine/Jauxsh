@@ -46,10 +46,10 @@
                 <!-- Price -->
                 <div>
                     <label for="price" class="block text-sm font-medium text-gray-700 font-cg mb-2">
-                        Price (USD) <span class="text-red-500">*</span>
+                        Price (₱) <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
-                        <span class="absolute left-4 top-3 text-gray-500 font-cg">$</span>
+                        <span class="absolute left-4 top-3 text-gray-500 font-cg">₱</span>
                         <input type="number" 
                                name="price" 
                                id="price" 

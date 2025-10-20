@@ -25,7 +25,7 @@
                 <h2 class="text-2xl font-bold text-[#1D433F] font-lora mb-1">Add New Variant</h2>
                 <p class="text-gray-600 font-cg">
                     Product: <span class="font-semibold text-gray-900">{{ $product->name }}</span> | 
-                    Base Price: <span class="font-semibold text-gray-900">${{ number_format($product->price, 2) }}</span>
+                    Base Price: <span class="font-semibold text-gray-900">₱{{ number_format($product->price, 2) }}</span>
                 </p>
             </div>
 
@@ -202,7 +202,7 @@
                     <p class="mt-1 text-sm text-red-600 font-cg">{{ $message }}</p>
                     @enderror
                     <p class="mt-1 text-xs text-gray-500 font-cg">
-                        Final price will be: <span class="font-semibold text-gray-900">${{ number_format($product->price, 2) }}</span> + adjustment
+                        Final price will be: <span class="font-semibold text-gray-900">₱{{ number_format($product->price, 2) }}</span> + adjustment
                     </p>
                 </div>
 

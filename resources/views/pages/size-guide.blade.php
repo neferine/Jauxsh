@@ -19,7 +19,7 @@
                 Size Guide
             </h1>
             <p class="font-lora text-gray-600 text-base">
-                Find your perfect fit with our comprehensive sizing information.
+                Find your perfect fit with our comprehensive sizing information. All our products are unisex.
             </p>
         </div>
 
@@ -30,7 +30,7 @@
             <div class="bg-[#1fac99ff] bg-opacity-10 p-8 rounded-sm border-l-4 border-[#1fac99ff]">
                 <h3 class="font-cg font-bold text-xl uppercase text-gray-900 mb-3 tracking-wide">Our Products Are True to Size</h3>
                 <p class="font-lora text-gray-700 text-base leading-relaxed">
-                    All Jauxsh garments are designed to fit true to size. Simply order your regular size for the perfect fit. 
+                    All Jauxsh garments are designed as unisex pieces with a true-to-size fit. Simply order your regular size for the perfect fit. 
                     If you're between sizes or prefer a looser fit, we recommend sizing up.
                 </p>
             </div>
@@ -53,18 +53,16 @@
                     </div>
                     
                     <div class="bg-gray-50 p-6 rounded-sm">
-                        <h3 class="font-cg font-semibold text-lg uppercase text-gray-900 mb-3">Waist</h3>
+                        <h3 class="font-cg font-semibold text-lg uppercase text-gray-900 mb-3">Length</h3>
                         <p class="font-lora text-gray-700 text-base leading-relaxed">
-                            Measure around your natural waistline, keeping one finger between the tape and your body 
-                            for a comfortable fit.
+                            Measure from the highest point of the shoulder down to the desired length point.
                         </p>
                     </div>
                     
                     <div class="bg-gray-50 p-6 rounded-sm">
-                        <h3 class="font-cg font-semibold text-lg uppercase text-gray-900 mb-3">Hips</h3>
+                        <h3 class="font-cg font-semibold text-lg uppercase text-gray-900 mb-3">Shoulder</h3>
                         <p class="font-lora text-gray-700 text-base leading-relaxed">
-                            Measure around the fullest part of your hips, approximately 8 inches below your natural 
-                            waistline.
+                            Measure from one shoulder point to the other across the back of your neck.
                         </p>
                     </div>
                     
@@ -78,9 +76,9 @@
                 </div>
             </div>
 
-            <!-- Men's T-Shirts -->
+            <!-- T-Shirts & Tops -->
             <div>
-                <h2 class="font-cg font-bold text-2xl uppercase text-gray-900 mb-6 tracking-wide">Men's T-Shirts</h2>
+                <h2 class="font-cg font-bold text-2xl uppercase text-gray-900 mb-6 tracking-wide">T-Shirts & Tops</h2>
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse">
                         <thead>
@@ -94,94 +92,39 @@
                         <tbody class="font-lora">
                             <tr class="border-b border-gray-200">
                                 <td class="py-4 px-6 font-semibold">XS</td>
-                                <td class="py-4 px-6 text-center">34-36</td>
-                                <td class="py-4 px-6 text-center">27</td>
-                                <td class="py-4 px-6 text-center">17</td>
+                                <td class="py-4 px-6 text-center">21.25</td>
+                                <td class="py-4 px-6 text-center">25.00</td>
+                                <td class="py-4 px-6 text-center">17.00</td>
                             </tr>
                             <tr class="border-b border-gray-200 bg-gray-50">
                                 <td class="py-4 px-6 font-semibold">S</td>
-                                <td class="py-4 px-6 text-center">36-38</td>
-                                <td class="py-4 px-6 text-center">28</td>
-                                <td class="py-4 px-6 text-center">18</td>
+                                <td class="py-4 px-6 text-center">22.50</td>
+                                <td class="py-4 px-6 text-center">26.00</td>
+                                <td class="py-4 px-6 text-center">18.00</td>
                             </tr>
                             <tr class="border-b border-gray-200">
                                 <td class="py-4 px-6 font-semibold">M</td>
-                                <td class="py-4 px-6 text-center">38-40</td>
-                                <td class="py-4 px-6 text-center">29</td>
-                                <td class="py-4 px-6 text-center">19</td>
+                                <td class="py-4 px-6 text-center">23.75</td>
+                                <td class="py-4 px-6 text-center">27.00</td>
+                                <td class="py-4 px-6 text-center">19.00</td>
                             </tr>
                             <tr class="border-b border-gray-200 bg-gray-50">
                                 <td class="py-4 px-6 font-semibold">L</td>
-                                <td class="py-4 px-6 text-center">40-42</td>
-                                <td class="py-4 px-6 text-center">30</td>
-                                <td class="py-4 px-6 text-center">20</td>
+                                <td class="py-4 px-6 text-center">25.00</td>
+                                <td class="py-4 px-6 text-center">28.00</td>
+                                <td class="py-4 px-6 text-center">20.00</td>
                             </tr>
                             <tr class="border-b border-gray-200">
                                 <td class="py-4 px-6 font-semibold">XL</td>
-                                <td class="py-4 px-6 text-center">42-44</td>
-                                <td class="py-4 px-6 text-center">31</td>
-                                <td class="py-4 px-6 text-center">21</td>
+                                <td class="py-4 px-6 text-center">26.25</td>
+                                <td class="py-4 px-6 text-center">29.00</td>
+                                <td class="py-4 px-6 text-center">21.00</td>
                             </tr>
                             <tr class="border-b border-gray-200 bg-gray-50">
-                                <td class="py-4 px-6 font-semibold">2XL</td>
-                                <td class="py-4 px-6 text-center">44-46</td>
-                                <td class="py-4 px-6 text-center">32</td>
-                                <td class="py-4 px-6 text-center">22</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Women's T-Shirts -->
-            <div>
-                <h2 class="font-cg font-bold text-2xl uppercase text-gray-900 mb-6 tracking-wide">Women's T-Shirts</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full border-collapse">
-                        <thead>
-                            <tr class="bg-gray-900 text-white">
-                                <th class="font-cg uppercase text-sm py-4 px-6 text-left">Size</th>
-                                <th class="font-cg uppercase text-sm py-4 px-6 text-center">Bust (inches)</th>
-                                <th class="font-cg uppercase text-sm py-4 px-6 text-center">Length (inches)</th>
-                                <th class="font-cg uppercase text-sm py-4 px-6 text-center">Shoulder (inches)</th>
-                            </tr>
-                        </thead>
-                        <tbody class="font-lora">
-                            <tr class="border-b border-gray-200">
-                                <td class="py-4 px-6 font-semibold">XS</td>
-                                <td class="py-4 px-6 text-center">32-34</td>
-                                <td class="py-4 px-6 text-center">25</td>
-                                <td class="py-4 px-6 text-center">14</td>
-                            </tr>
-                            <tr class="border-b border-gray-200 bg-gray-50">
-                                <td class="py-4 px-6 font-semibold">S</td>
-                                <td class="py-4 px-6 text-center">34-36</td>
-                                <td class="py-4 px-6 text-center">26</td>
-                                <td class="py-4 px-6 text-center">15</td>
-                            </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-4 px-6 font-semibold">M</td>
-                                <td class="py-4 px-6 text-center">36-38</td>
-                                <td class="py-4 px-6 text-center">27</td>
-                                <td class="py-4 px-6 text-center">16</td>
-                            </tr>
-                            <tr class="border-b border-gray-200 bg-gray-50">
-                                <td class="py-4 px-6 font-semibold">L</td>
-                                <td class="py-4 px-6 text-center">38-40</td>
-                                <td class="py-4 px-6 text-center">28</td>
-                                <td class="py-4 px-6 text-center">17</td>
-                            </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-4 px-6 font-semibold">XL</td>
-                                <td class="py-4 px-6 text-center">40-42</td>
-                                <td class="py-4 px-6 text-center">29</td>
-                                <td class="py-4 px-6 text-center">18</td>
-                            </tr>
-                            <tr class="border-b border-gray-200 bg-gray-50">
-                                <td class="py-4 px-6 font-semibold">2XL</td>
-                                <td class="py-4 px-6 text-center">42-44</td>
-                                <td class="py-4 px-6 text-center">30</td>
-                                <td class="py-4 px-6 text-center">19</td>
+                                <td class="py-4 px-6 font-semibold">XXL</td>
+                                <td class="py-4 px-6 text-center">27.50</td>
+                                <td class="py-4 px-6 text-center">30.00</td>
+                                <td class="py-4 px-6 text-center">22.00</td>
                             </tr>
                         </tbody>
                     </table>
@@ -203,34 +146,40 @@
                         </thead>
                         <tbody class="font-lora">
                             <tr class="border-b border-gray-200">
+                                <td class="py-4 px-6 font-semibold">XS</td>
+                                <td class="py-4 px-6 text-center">22.00</td>
+                                <td class="py-4 px-6 text-center">26.00</td>
+                                <td class="py-4 px-6 text-center">32.00</td>
+                            </tr>
+                            <tr class="border-b border-gray-200 bg-gray-50">
                                 <td class="py-4 px-6 font-semibold">S</td>
-                                <td class="py-4 px-6 text-center">38-40</td>
-                                <td class="py-4 px-6 text-center">27</td>
-                                <td class="py-4 px-6 text-center">33</td>
+                                <td class="py-4 px-6 text-center">23.00</td>
+                                <td class="py-4 px-6 text-center">27.00</td>
+                                <td class="py-4 px-6 text-center">33.00</td>
                             </tr>
-                            <tr class="border-b border-gray-200 bg-gray-50">
+                            <tr class="border-b border-gray-200">
                                 <td class="py-4 px-6 font-semibold">M</td>
-                                <td class="py-4 px-6 text-center">40-42</td>
-                                <td class="py-4 px-6 text-center">28</td>
-                                <td class="py-4 px-6 text-center">34</td>
-                            </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-4 px-6 font-semibold">L</td>
-                                <td class="py-4 px-6 text-center">42-44</td>
-                                <td class="py-4 px-6 text-center">29</td>
-                                <td class="py-4 px-6 text-center">35</td>
+                                <td class="py-4 px-6 text-center">24.00</td>
+                                <td class="py-4 px-6 text-center">28.00</td>
+                                <td class="py-4 px-6 text-center">34.00</td>
                             </tr>
                             <tr class="border-b border-gray-200 bg-gray-50">
-                                <td class="py-4 px-6 font-semibold">XL</td>
-                                <td class="py-4 px-6 text-center">44-46</td>
-                                <td class="py-4 px-6 text-center">30</td>
-                                <td class="py-4 px-6 text-center">36</td>
+                                <td class="py-4 px-6 font-semibold">L</td>
+                                <td class="py-4 px-6 text-center">25.50</td>
+                                <td class="py-4 px-6 text-center">29.00</td>
+                                <td class="py-4 px-6 text-center">35.00</td>
                             </tr>
                             <tr class="border-b border-gray-200">
-                                <td class="py-4 px-6 font-semibold">2XL</td>
-                                <td class="py-4 px-6 text-center">46-48</td>
-                                <td class="py-4 px-6 text-center">31</td>
-                                <td class="py-4 px-6 text-center">37</td>
+                                <td class="py-4 px-6 font-semibold">XL</td>
+                                <td class="py-4 px-6 text-center">27.00</td>
+                                <td class="py-4 px-6 text-center">30.00</td>
+                                <td class="py-4 px-6 text-center">36.00</td>
+                            </tr>
+                            <tr class="border-b border-gray-200 bg-gray-50">
+                                <td class="py-4 px-6 font-semibold">XXL</td>
+                                <td class="py-4 px-6 text-center">28.50</td>
+                                <td class="py-4 px-6 text-center">31.00</td>
+                                <td class="py-4 px-6 text-center">37.00</td>
                             </tr>
                         </tbody>
                     </table>
@@ -244,7 +193,7 @@
                     <div class="bg-gray-50 p-6 rounded-sm">
                         <h3 class="font-cg font-semibold text-lg uppercase text-gray-900 mb-3">Regular Fit</h3>
                         <p class="font-lora text-gray-700 text-base leading-relaxed">
-                            Our standard fit that's neither too loose nor too tight. Perfect for everyday wear with 
+                            Our standard unisex fit that's neither too loose nor too tight. Perfect for everyday wear with 
                             comfortable room through the body.
                         </p>
                     </div>
@@ -274,6 +223,10 @@
                     <li class="flex items-start">
                         <span class="text-[#1fac99ff] mr-3 mt-1">•</span>
                         <span><strong>Between sizes?</strong> If you're between sizes, we recommend sizing up for a more comfortable fit.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-[#1fac99ff] mr-3 mt-1">•</span>
+                        <span><strong>Unisex sizing:</strong> Our pieces are designed to be unisex. Refer to the measurements rather than traditional gender-based sizing.</span>
                     </li>
                     <li class="flex items-start">
                         <span class="text-[#1fac99ff] mr-3 mt-1">•</span>

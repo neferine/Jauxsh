@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </h5>
                             <div class="flex items-center gap-3">
                                 <p class="font-lora text-lg font-bold text-gray-900">
-                                    $${parseFloat(product.price).toFixed(2)}
+                                    ₱${parseFloat(product.price).toFixed(2)}
                                 </p>
                                 ${product.category ? `<span class="text-xs text-gray-500 font-cg uppercase tracking-wide">${product.category}</span>` : ''}
                             </div>

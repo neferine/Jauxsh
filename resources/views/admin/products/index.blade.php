@@ -73,7 +73,7 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 text-sm font-medium text-gray-900 font-cg">
-                            ${{ number_format($product->price, 2) }}
+                            ₱{{ number_format($product->price, 2) }}
                         </td>
                         <td class="px-6 py-4">
                             @php
@@ -206,9 +206,9 @@
                                         </td>
                                         <td class="px-4 py-3 font-cg text-gray-900">
                                             @if($variant->price_adjustment > 0)
-                                            <span class="text-green-600">+${{ number_format($variant->price_adjustment, 2) }}</span>
+                                            <span class="text-green-600">+₱{{ number_format($variant->price_adjustment, 2) }}</span>
                                             @elseif($variant->price_adjustment < 0)
-                                            <span class="text-red-600">-${{ number_format(abs($variant->price_adjustment), 2) }}</span>
+                                            <span class="text-red-600">-₱{{ number_format(abs($variant->price_adjustment), 2) }}</span>
                                             @else
                                             <span class="text-gray-500">No adjustment</span>
                                             @endif

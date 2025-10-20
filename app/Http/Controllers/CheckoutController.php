@@ -78,12 +78,45 @@ class CheckoutController extends Controller
     // Process checkout
     public function process(Request $request)
     {
-        $validated = $request->validate([
-            'shipping_address_id' => 'required|exists:shipping_addresses,id',
-            'payment_method' => 'required|in:credit_card,debit_card,paypal,bank_transfer,cod',
-        ]);
-
         $user = Auth::user();
+        
+        // Check if user is using existing address or creating new one
+        $hasExistingAddresses = ShippingAddress::where('user_id', $user->id)->exists();
+        
+        if ($hasExistingAddresses) {
+            // Validate existing address selection
+            $validated = $request->validate([
+                'shipping_address_id' => 'required|exists:shipping_addresses,id',
+                'payment_method' => 'required|in:credit_card,debit_card,paypal,bank_transfer,cod',
+            ]);
+            
+            $shippingAddressId = $validated['shipping_address_id'];
+        } else {
+            // Validate and create new address
+            $validated = $request->validate([
+                'address_line1' => 'required|string|max:255',
+                'address_line2' => 'nullable|string|max:255',
+                'city' => 'required|string|max:255',
+                'postal_code' => 'required|string|max:20',
+                'country' => 'required|string|max:255',
+                'phone_number' => 'required|string|max:20|regex:/^[\d\s\+\-\(\)]+$/',
+                'payment_method' => 'required|in:credit_card,debit_card,paypal,bank_transfer,cod',
+            ]);
+            
+            // Create new shipping address
+            $newAddress = ShippingAddress::create([
+                'user_id' => $user->id,
+                'address_line1' => $validated['address_line1'],
+                'address_line2' => $validated['address_line2'] ?? null,
+                'city' => $validated['city'],
+                'postal_code' => $validated['postal_code'],
+                'country' => $validated['country'],
+                'phone_number' => $validated['phone_number'],
+            ]);
+            
+            $shippingAddressId = $newAddress->id;
+        }
+
         $cart = Cart::where('user_id', $user->id)
             ->with('cartItems.product')
             ->lockForUpdate() // Lock cart to prevent race conditions
@@ -94,14 +127,14 @@ class CheckoutController extends Controller
         }
 
         // Verify shipping address belongs to user (SECURITY: Prevent address hijacking)
-        $shippingAddress = ShippingAddress::where('id', $validated['shipping_address_id'])
+        $shippingAddress = ShippingAddress::where('id', $shippingAddressId)
             ->where('user_id', $user->id)
             ->first();
 
         if (!$shippingAddress) {
             Log::warning('Unauthorized shipping address access attempt', [
                 'user_id' => $user->id,
-                'address_id' => $validated['shipping_address_id']
+                'address_id' => $shippingAddressId
             ]);
             return redirect()->back()->with('error', 'Invalid shipping address');
         }

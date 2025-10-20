@@ -54,7 +54,7 @@
             {{-- Subtotal --}}
             <div class="flex items-center justify-between">
                 <span class="font-lora text-base text-gray-700">Subtotal</span>
-                <span id="cartSubtotal" class="font-lora text-xl font-semibold text-gray-900">$0.00</span>
+                <span id="cartSubtotal" class="font-lora text-xl font-semibold text-gray-900">₱0.00</span>
             </div>
 
             {{-- Shipping Note --}}
@@ -167,7 +167,7 @@ function renderCartItems(cartItems) {
                         </a>
                         
                         <p class="font-lora text-sm text-gray-600 mb-3">
-                            $${parseFloat(product.price).toFixed(2)}
+                            ₱${parseFloat(product.price).toFixed(2)}
                         </p>
                         
                         <div class="flex items-center justify-between">
@@ -208,7 +208,7 @@ function renderCartItems(cartItems) {
 function updateCartTotal(total) {
     const subtotal = document.getElementById('cartSubtotal');
     if (subtotal) {
-        subtotal.textContent = `$${parseFloat(total).toFixed(2)}`;
+        subtotal.textContent = `₱${parseFloat(total).toFixed(2)}`;
     }
 }
 

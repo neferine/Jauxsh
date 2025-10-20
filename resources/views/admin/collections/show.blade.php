@@ -181,7 +181,7 @@
                                             <div class="flex items-center mt-1 text-sm text-gray-500 font-cg space-x-4">
                                                 <span>
                                                     @if($product->price)
-                                                        ${{ number_format($product->price, 2) }}
+                                                        ₱{{ number_format($product->price, 2) }}
                                                     @else
                                                         Price not set
                                                     @endif

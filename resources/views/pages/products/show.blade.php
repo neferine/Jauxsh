@@ -86,7 +86,7 @@
                 <!-- Price and Stock -->
                 <div class="mb-6 pt-4">
                     <p class="font-lora text-3xl font-semibold text-gray-900 mb-2" id="productPrice" data-base-price="{{ $product->price }}">
-                        ${{ number_format($product->price, 2) }}
+                        ₱{{ number_format($product->price, 2) }}
                     </p>
                     @if(!$product->has_variants)
                         @if($product->stock > 0)
@@ -231,7 +231,7 @@
 
                 <!-- Additional Information Accordions -->
                 <div class="mt-12 pt-12 border-t-2 border-gray-200 space-y-4">
-                    <!-- Size Guide -->
+                    <!-- Size Guide - Dynamic based on category -->
                     <details class="group">
                         <summary class="flex items-center justify-between cursor-pointer py-4 px-0 font-cg text-sm font-bold uppercase tracking-widest text-gray-900 hover:text-[#1D433F] transition-colors">
                             <span>Size Guide</span>
@@ -240,59 +240,122 @@
                             </svg>
                         </summary>
                         <div class="pb-4 font-lora text-sm text-gray-600 space-y-4">
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-xs">
-                                    <thead>
-                                        <tr class="border-b border-gray-300">
-                                            <th class="text-left py-2 px-2 font-semibold">Measurement</th>
-                                            <th class="text-center py-2 px-2">XS</th>
-                                            <th class="text-center py-2 px-2">S</th>
-                                            <th class="text-center py-2 px-2">M</th>
-                                            <th class="text-center py-2 px-2">L</th>
-                                            <th class="text-center py-2 px-2">XL</th>
-                                            <th class="text-center py-2 px-2">XXL</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="border-b border-gray-200">
-                                            <td class="py-2 px-2 font-medium">Length</td>
-                                            <td class="text-center py-2 px-2">25.00"</td>
-                                            <td class="text-center py-2 px-2">26.00"</td>
-                                            <td class="text-center py-2 px-2">27.00"</td>
-                                            <td class="text-center py-2 px-2">28.00"</td>
-                                            <td class="text-center py-2 px-2">29.00"</td>
-                                            <td class="text-center py-2 px-2">30.00"</td>
-                                        </tr>
-                                        <tr class="border-b border-gray-200">
-                                            <td class="py-2 px-2 font-medium">Chest</td>
-                                            <td class="text-center py-2 px-2">21.25"</td>
-                                            <td class="text-center py-2 px-2">22.50"</td>
-                                            <td class="text-center py-2 px-2">23.75"</td>
-                                            <td class="text-center py-2 px-2">25.00"</td>
-                                            <td class="text-center py-2 px-2">26.25"</td>
-                                            <td class="text-center py-2 px-2">27.50"</td>
-                                        </tr>
-                                        <tr class="border-b border-gray-200">
-                                            <td class="py-2 px-2 font-medium">Shoulder</td>
-                                            <td class="text-center py-2 px-2">17.00"</td>
-                                            <td class="text-center py-2 px-2">18.00"</td>
-                                            <td class="text-center py-2 px-2">19.00"</td>
-                                            <td class="text-center py-2 px-2">20.00"</td>
-                                            <td class="text-center py-2 px-2">21.00"</td>
-                                            <td class="text-center py-2 px-2">22.00"</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="py-2 px-2 font-medium">Sleeve</td>
-                                            <td class="text-center py-2 px-2">25.25"</td>
-                                            <td class="text-center py-2 px-2">25.50"</td>
-                                            <td class="text-center py-2 px-2">26.00"</td>
-                                            <td class="text-center py-2 px-2">26.75"</td>
-                                            <td class="text-center py-2 px-2">26.75"</td>
-                                            <td class="text-center py-2 px-2">27.00"</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            @php
+                                $categoryName = $product->category ? strtolower($product->category->name) : '';
+                                $isHoodie = str_contains($categoryName, 'hoodie') || str_contains($categoryName, 'sweatshirt') || str_contains($categoryName, 'jacket');
+                            @endphp
+
+                            @if($isHoodie)
+                                <!-- Hoodies & Sweatshirts Size Guide -->
+                                <p class="text-xs text-gray-500 italic mb-3">All measurements are in inches. Unisex sizing.</p>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-xs">
+                                        <thead>
+                                            <tr class="border-b border-gray-300">
+                                                <th class="text-left py-2 px-2 font-semibold">Size</th>
+                                                <th class="text-center py-2 px-2">Chest</th>
+                                                <th class="text-center py-2 px-2">Length</th>
+                                                <th class="text-center py-2 px-2">Sleeve</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="border-b border-gray-200">
+                                                <td class="py-2 px-2 font-medium">XS</td>
+                                                <td class="text-center py-2 px-2">22.00"</td>
+                                                <td class="text-center py-2 px-2">26.00"</td>
+                                                <td class="text-center py-2 px-2">32.00"</td>
+                                            </tr>
+                                            <tr class="border-b border-gray-200">
+                                                <td class="py-2 px-2 font-medium">S</td>
+                                                <td class="text-center py-2 px-2">23.00"</td>
+                                                <td class="text-center py-2 px-2">27.00"</td>
+                                                <td class="text-center py-2 px-2">33.00"</td>
+                                            </tr>
+                                            <tr class="border-b border-gray-200">
+                                                <td class="py-2 px-2 font-medium">M</td>
+                                                <td class="text-center py-2 px-2">24.00"</td>
+                                                <td class="text-center py-2 px-2">28.00"</td>
+                                                <td class="text-center py-2 px-2">34.00"</td>
+                                            </tr>
+                                            <tr class="border-b border-gray-200">
+                                                <td class="py-2 px-2 font-medium">L</td>
+                                                <td class="text-center py-2 px-2">25.50"</td>
+                                                <td class="text-center py-2 px-2">29.00"</td>
+                                                <td class="text-center py-2 px-2">35.00"</td>
+                                            </tr>
+                                            <tr class="border-b border-gray-200">
+                                                <td class="py-2 px-2 font-medium">XL</td>
+                                                <td class="text-center py-2 px-2">27.00"</td>
+                                                <td class="text-center py-2 px-2">30.00"</td>
+                                                <td class="text-center py-2 px-2">36.00"</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-2 px-2 font-medium">XXL</td>
+                                                <td class="text-center py-2 px-2">28.50"</td>
+                                                <td class="text-center py-2 px-2">31.00"</td>
+                                                <td class="text-center py-2 px-2">37.00"</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @else
+                                <!-- T-Shirts & Tops Size Guide -->
+                                <p class="text-xs text-gray-500 italic mb-3">All measurements are in inches. Unisex sizing.</p>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-xs">
+                                        <thead>
+                                            <tr class="border-b border-gray-300">
+                                                <th class="text-left py-2 px-2 font-semibold">Size</th>
+                                                <th class="text-center py-2 px-2">Chest</th>
+                                                <th class="text-center py-2 px-2">Length</th>
+                                                <th class="text-center py-2 px-2">Shoulder</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="border-b border-gray-200">
+                                                <td class="py-2 px-2 font-medium">XS</td>
+                                                <td class="text-center py-2 px-2">21.25"</td>
+                                                <td class="text-center py-2 px-2">25.00"</td>
+                                                <td class="text-center py-2 px-2">17.00"</td>
+                                            </tr>
+                                            <tr class="border-b border-gray-200">
+                                                <td class="py-2 px-2 font-medium">S</td>
+                                                <td class="text-center py-2 px-2">22.50"</td>
+                                                <td class="text-center py-2 px-2">26.00"</td>
+                                                <td class="text-center py-2 px-2">18.00"</td>
+                                            </tr>
+                                            <tr class="border-b border-gray-200">
+                                                <td class="py-2 px-2 font-medium">M</td>
+                                                <td class="text-center py-2 px-2">23.75"</td>
+                                                <td class="text-center py-2 px-2">27.00"</td>
+                                                <td class="text-center py-2 px-2">19.00"</td>
+                                            </tr>
+                                            <tr class="border-b border-gray-200">
+                                                <td class="py-2 px-2 font-medium">L</td>
+                                                <td class="text-center py-2 px-2">25.00"</td>
+                                                <td class="text-center py-2 px-2">28.00"</td>
+                                                <td class="text-center py-2 px-2">20.00"</td>
+                                            </tr>
+                                            <tr class="border-b border-gray-200">
+                                                <td class="py-2 px-2 font-medium">XL</td>
+                                                <td class="text-center py-2 px-2">26.25"</td>
+                                                <td class="text-center py-2 px-2">29.00"</td>
+                                                <td class="text-center py-2 px-2">21.00"</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-2 px-2 font-medium">XXL</td>
+                                                <td class="text-center py-2 px-2">27.50"</td>
+                                                <td class="text-center py-2 px-2">30.00"</td>
+                                                <td class="text-center py-2 px-2">22.00"</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @endif
+                            
+                            <p class="text-xs text-gray-500 mt-3">
+                                <strong>Tip:</strong> All Jauxsh products are unisex and true to size. If you're between sizes or prefer a looser fit, size up.
+                            </p>
                         </div>
                     </details>
 
@@ -310,8 +373,6 @@
                             <p class="text-xs text-gray-500">Orders to PO boxes will not be accepted.</p>
                         </div>
                     </details>
-
-                    <!-- Fabric Information -->
 
                     <!-- Return Policy -->
                     <details class="group border-t border-gray-200">
@@ -347,7 +408,7 @@
                             </div>
                             <div>
                                 <p class="font-semibold text-gray-900 mb-2">How do I know my size?</p>
-                                <p>Check the size guide above for accurate measurements. We recommend measuring a garment you already own.</p>
+                                <p>Check the size guide above for accurate measurements. We recommend measuring a garment you already own. All our products are unisex.</p>
                             </div>
                         </div>
                     </details>
@@ -393,7 +454,7 @@
                         </h3>
                         <div class="flex items-center justify-between">
                             <p class="font-lora text-lg font-semibold text-gray-900">
-                                ${{ number_format($related->price, 2) }}
+                                ₱{{ number_format($related->price, 2) }}
                             </p>
                             @if($related->has_variants)
                                 <span class="text-xs text-[#1FAC99] font-cg font-semibold">In stock</span>
@@ -475,7 +536,7 @@ function updateVariantSelection() {
     
     if (variant) {
         document.getElementById('selectedVariantId').value = variant.id;
-        priceDisplay.textContent = '$' + parseFloat(variant.final_price).toFixed(2);
+        priceDisplay.textContent = '₱' + parseFloat(variant.final_price).toFixed(2);
         maxStock = variant.stock;
         document.getElementById('quantity').max = variant.stock;
         

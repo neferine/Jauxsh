@@ -333,7 +333,7 @@ function renderProductCard(product) {
             <div class="p-4">
                 <h3 class="font-lora text-base text-gray-900 mb-1 truncate">${product.name}</h3>
                 <div class="flex items-center justify-between">
-                    <p class="font-lora text-sm font-medium text-gray-900">$${parseFloat(product.price).toFixed(2)}</p>
+                    <p class="font-lora text-sm font-medium text-gray-900">₱${parseFloat(product.price).toFixed(2)}</p>
                     ${product.stock <= 0 
                         ? '<span class="text-xs text-red-600 font-cg">Out of stock</span>' 
                         : product.stock <= 10 

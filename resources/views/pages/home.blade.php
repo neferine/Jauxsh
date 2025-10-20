@@ -104,7 +104,7 @@
                     <div class="p-4">
                         <h3 class="font-lora text-base text-gray-900 mb-1 truncate">{{ $product->name }}</h3>
                         <div class="flex items-center justify-between">
-                            <p class="font-lora text-sm font-medium text-gray-900 price-display" data-original-price="{{ $product->price }}">${{ number_format($product->price, 2) }}</p>
+                            <p class="font-lora text-sm font-medium text-gray-900 price-display" data-original-price="{{ $product->price }}">₱{{ number_format($product->price, 2) }}</p>
                             @if($product->stock <= 0)
                             <span class="text-xs text-red-600 font-cg">Out of stock</span>
                             @elseif($product->stock <= 10)
@@ -162,7 +162,7 @@
                     <div class="p-4">
                         <h3 class="font-lora text-base text-gray-900 mb-1 truncate">{{ $product->name }}</h3>
                         <div class="flex items-center justify-between">
-                            <p class="font-lora text-sm font-medium text-gray-900 price-display" data-original-price="{{ $product->price }}">${{ number_format($product->price, 2) }}</p>
+                            <p class="font-lora text-sm font-medium text-gray-900 price-display" data-original-price="{{ $product->price }}">₱{{ number_format($product->price, 2) }}</p>
                             @if($product->stock <= 0)
                             <span class="text-xs text-red-600 font-cg">Out of stock</span>
                             @elseif($product->stock <= 10)

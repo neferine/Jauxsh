@@ -191,7 +191,7 @@
                                     <tr class="hover:bg-gray-50 transition-colors duration-150">
                                         <td class="px-6 py-4 font-lora text-sm text-gray-900">#{{ $order->id }}</td>
                                         <td class="px-6 py-4 font-lora text-sm text-gray-600">{{ $order->created_at->format('M d, Y') }}</td>
-                                        <td class="px-6 py-4 font-lora text-sm font-medium text-gray-900">${{ number_format($order->total, 2) }}</td>
+                                        <td class="px-6 py-4 font-lora text-sm font-medium text-gray-900">₱{{ number_format($order->total_amount, 2) }}</td>
                                         <td class="px-6 py-4">
                                             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-cg uppercase tracking-wide
                                                 {{ $order->status === 'delivered' ? 'bg-green-100 text-green-800' : '' }}

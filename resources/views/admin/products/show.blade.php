@@ -87,7 +87,7 @@
 
                 <div class="flex items-baseline gap-4 mb-6">
                     <p class="font-lora text-3xl font-bold text-gray-900">
-                        ${{ number_format($product->price, 2) }}
+                        ₱{{ number_format($product->price, 2) }}
                     </p>
                     @if($product->stock > 0)
                     <p class="text-sm text-green-600 font-cg">
@@ -252,7 +252,7 @@
                         </h3>
                         <div class="flex items-center justify-between">
                             <p class="font-lora text-lg font-semibold text-gray-900">
-                                ${{ number_format($related->price, 2) }}
+                                ₱{{ number_format($related->price, 2) }}
                             </p>
                             @if($related->stock <= 0)
                             <span class="text-xs text-red-600 font-cg">Out of stock</span>

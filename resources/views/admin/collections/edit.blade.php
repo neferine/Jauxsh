@@ -207,7 +207,7 @@
                                 <option value="">Choose a product...</option>
                                 @foreach($products as $product)
                                     @if(!in_array($product->id, $collectionProducts))
-                                        <option value="{{ $product->id }}">{{ $product->name }} - ${{ number_format($product->price, 2) }}</option>
+                                        <option value="{{ $product->id }}">{{ $product->name }} - ₱{{ number_format($product->price, 2) }}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -256,7 +256,7 @@
                                                 {{ $product->name }}
                                             </h4>
                                             <p class="text-sm text-gray-500 font-cg mt-1">
-                                                ${{ number_format($product->price, 2) }} • Sort: {{ $product->pivot->sort_order }}
+                                                ₱{{ number_format($product->price, 2) }} • Sort: {{ $product->pivot->sort_order }}
                                             </p>
                                         </div>
                                     </div>

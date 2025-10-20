@@ -16,7 +16,7 @@
             </div>
             <h2 class="text-2xl font-bold text-[#1D433F] font-lora">{{ $product->name }}</h2>
             <p class="text-gray-600 font-cg mt-1">
-                Base Price: <span class="font-semibold text-gray-900">${{ number_format($product->price, 2) }}</span>
+                Base Price: <span class="font-semibold text-gray-900">₱{{ number_format($product->price, 2) }}</span>
                 | Category: <span class="font-semibold text-gray-900">{{ $product->category->name ?? 'N/A' }}</span>
             </p>
         </div>
@@ -108,11 +108,11 @@
                         <td class="px-6 py-4">
                             <div class="text-sm font-cg">
                                 <div class="font-semibold text-gray-900">
-                                    ${{ number_format($product->price + $variant->price_adjustment, 2) }}
+                                    ₱{{ number_format($product->price + $variant->price_adjustment, 2) }}
                                 </div>
                                 @if($variant->price_adjustment != 0)
                                 <div class="text-xs {{ $variant->price_adjustment > 0 ? 'text-red-600' : 'text-green-600' }} font-cg">
-                                    {{ $variant->price_adjustment > 0 ? '+' : '' }}${{ number_format($variant->price_adjustment, 2) }}
+                                    {{ $variant->price_adjustment > 0 ? '+' : '' }}₱{{ number_format($variant->price_adjustment, 2) }}
                                 </div>
                                 @endif
                             </div>
