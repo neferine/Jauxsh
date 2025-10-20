@@ -4,7 +4,7 @@
 @section('content')
 <div class="w-full">
     <!-- Breadcrumb -->
-    <div class="bg-gray-50 py-4 border-b border-gray-200">
+    <div class=" py-4 border-b border-gray-200">
         <div class="container mx-auto px-6 md:px-12 lg:px-20 max-w-7xl">
             <nav class="flex items-center space-x-2 text-xs font-cg uppercase tracking-wide">
                 <a href="{{ route('home') }}" class="text-gray-600 hover:text-gray-900 transition-colors">Home</a>
@@ -312,23 +312,6 @@
                     </details>
 
                     <!-- Fabric Information -->
-                    <details class="group border-t border-gray-200">
-                        <summary class="flex items-center justify-between cursor-pointer py-4 px-0 font-cg text-sm font-bold uppercase tracking-widest text-gray-900 hover:text-[#1D433F] transition-colors">
-                            <span>Fabric Information</span>
-                            <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-                            </svg>
-                        </summary>
-                        <div class="pb-4 font-lora text-sm text-gray-600">
-                            <ul class="space-y-2 list-disc list-inside">
-                                <li>400 GSM Heavyweight Crossgrain Cut Fleece</li>
-                                <li>400 GSM Heavyweight 1x1 Rib</li>
-                                <li>100% Carded Cotton Canadian Milled Fabric</li>
-                                <li>2 Needle Coverstitch Construction</li>
-                                <li>Flatlock stitching underarm and side panel</li>
-                            </ul>
-                        </div>
-                    </details>
 
                     <!-- Return Policy -->
                     <details class="group border-t border-gray-200">

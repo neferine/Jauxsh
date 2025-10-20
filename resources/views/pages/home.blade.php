@@ -8,7 +8,7 @@
         <!-- Hero Image -->
         <div class="relative w-full h-[500px] md:h-[650px] overflow-hidden rounded-sm shadow-2xl mb-10">
             <img id="heroImage" 
-                 src="{{ asset('images/hero/hero1.png') }}" 
+                 src="{{ $heroCollections->count() > 0 && $heroCollections->first()->image_url ? asset('storage/' . $heroCollections->first()->image_url) : asset('images/hero/hero1.png') }}" 
                  alt="Hero Image"
                  class="w-full h-full object-cover object-center transition-opacity duration-500"
                  loading="lazy" >
@@ -53,8 +53,8 @@
 
             <!-- Shop Button (Bottom Right) -->
             <div class="absolute bottom-6 right-6">
-                <a id="shopBtn" href="/shop/jackets" class="shop-cta-btn inline-block px-8 py-2.5 font-lora text-sm text-white bg-black/20 backdrop-blur-sm border border-white/50 rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300">
-                    Shop Jackets →
+                <a id="shopBtn" href="{{ $heroCollections->count() > 0 ? '/collections/' . $heroCollections->first()->slug : '/shop' }}" class="shop-cta-btn inline-block px-8 py-2.5 font-lora text-sm text-white bg-black/20 backdrop-blur-sm border border-white/50 rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300">
+                    Shop Now →
                 </a>
             </div>
         </div>
@@ -62,13 +62,11 @@
         <!-- Hero Title & Description -->
         <div class="max-w-3xl">
             <h1 id="heroTitle" class="font-cg text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight uppercase text-gray-900 mb-6 transition-opacity duration-500">
-                Fleece Friends
+                {{ $heroCollections->count() > 0 ? $heroCollections->first()->name : 'Welcome to Jauxsh' }}
             </h1>
             
             <p id="heroDescription" class="text-gray-600 text-base md:text-lg leading-relaxed transition-opacity duration-500 font-lora">
-                Sweatshirts naturally require the perfect pair of sweatpants to achieve maximum comfort.
-                Add any sweatshirt and sweatpants to your cart and 
-                <span class="font-semibold text-gray-900">save 10%</span>!
+                {!! $heroCollections->count() > 0 ? $heroCollections->first()->description : 'Discover our latest collections and shop the newest styles.' !!}
             </p>
         </div>
     </div>
@@ -193,29 +191,29 @@
 
 @push('scripts')
 <script>
+    // Build heroData from collections passed from Laravel
     const heroData = [
+        @foreach($heroCollections as $collection)
         {
+            image: "{{ $collection->image_url ? asset('storage/' . $collection->image_url) : asset('images/hero/hero1.png') }}",
+            title: "{{ $collection->name }}",
+            description: `{!! addslashes($collection->description) !!}`,
+            shopLink: "{{ strtolower($collection->name) === 'welcome to jauxsh' ? '/shop' : '/collections/' . $collection->slug }}",
+            shopText: "{{ strtolower($collection->name) === 'welcome to jauxsh' ? 'Shop Now' : 'Shop ' . $collection->name }} →"
+        }{{ !$loop->last ? ',' : '' }}
+        @endforeach
+    ];
+
+    // Fallback if no collections exist
+    if (heroData.length === 0) {
+        heroData.push({
             image: "{{ asset('images/hero/hero1.png') }}",
-            title: "Fleece Friends",
-            description: "Sweatshirts naturally require the perfect pair of sweatpants to achieve maximum comfort. Add any sweatshirt and sweatpants to your cart and <span class='font-semibold text-gray-900'>save 10%</span>!",
+            title: "Welcome to Jauxsh",
+            description: "Discover our latest collections and shop the newest styles.",
             shopLink: "/shop",
             shopText: "Shop Now →"
-        },
-        {
-            image: "{{ asset('images/hero/hero2.png') }}",
-            title: "Summer Collection",
-            description: "Discover our latest summer styles with breathable fabrics and vibrant colors. Perfect for warm weather adventures. <span class='font-semibold text-gray-900'>Shop now</span>!",
-            shopLink: "/shop",
-            shopText: "Shop Summer →"
-        },
-        {
-            image: "{{ asset('images/hero/hero3.png') }}",
-            title: "Winter Warmth",
-            description: "Bundle up in style with our cozy winter collection. Premium materials meet modern design. <span class='font-semibold text-gray-900'>Save 15% on bundles</span>!",
-            shopLink: "/shop",
-            shopText: "Shop Winter →"
-        }
-    ];
+        });
+    }
 
     let currentSlide = 0;
     let autoplayInterval = null;
